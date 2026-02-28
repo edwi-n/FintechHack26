@@ -26,17 +26,22 @@ The game revolves around managing a portfolio and deploying derivatives to attac
 
 ## 2. The Game Loop (State Machine)
 
-The game is split into two distinct phases, perfectly documented on your flowchart.
+The game is split into two distinct phases.
+In the beginning, a random time before 2022 (this can be changed depending on the mode chosen at the start of the game) is chosen. Then 5 random stock at that time are placed on each player's hand. Then the game continues by going forward 3 months in that stock.
 
 ### A. Ready Phase (Player Setup)
 
 1. **Initialize:** Define Game Mode and # of Rounds.
 2. **Buy Phase:** P1 and P2 can buy stocks from their "Hand" and move them to their "Bench".
-3. **Action Phase:** Players choose what to do in the Arena:
+3. **Action Phase:** Players choose what to do in the Arena, they have the following options for every card in their bench:
 * *Place Card:* Deploy a standard stock to the battlefield.
-* *Attack Put / Defense Put:* Target an opponent's stock or hedge your own.
+* *Attack Put* Hedge your own stock.
 * *Call:* Deploy a Call option.
 * *Hold State:* Pass/Wait.
+  The player has the following options for every card in the opponents bench:
+* *Attack Put* Target an opponent's stock.
+
+  Each player can see the past 6 months' stock data for each stock.
 
 
 4. **Premium Calculation:** If an Option (Call/Put) is chosen, the game calculates the Premium using the Black-Scholes (B-S) Model.
