@@ -72,8 +72,6 @@ In the beginning, a random time before 2022 (this can be changed depending on th
 
 ## 3. Combat Math & Equations
 
-*Note: $S_0$ = Starting Price, $S_1$ = New Price after 3 months)*
-
 ### 1. The Bench (Passive Growth)
 
 Stocks on the bench do not trigger options math, they just grow or shrink based on standard price movement.
