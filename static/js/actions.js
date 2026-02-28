@@ -3,6 +3,11 @@
  * Functions triggered by player button clicks.
  */
 
+function selectMode(mode) {
+          gameMode = mode;
+          socket.emit('select_mode', { mode: mode });
+}
+
 function buyStock(i) {
           playSound('buy');
           socket.emit('buy_stock', { player_id: myPlayerId, card_index: i });

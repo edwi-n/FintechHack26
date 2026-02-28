@@ -2,7 +2,6 @@
 
 * [ ] inflation only occurs on cash and not stocks
 * [ ] generate llm insights after game end
-* [ ] menu at the start to select offline, multiplayer, rounds ...
 * [ ] animations & sound effects ( )
 * [ ] change icons
 * [ ] change button in the top right

@@ -2,160 +2,137 @@
 <html lang="en">
 
 <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Trading Arena - FinTech Card Game</title>
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
-          <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-          <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trading Arena - FinTech Card Game</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
 </head>
 
 <body>
-          <div class="top-bar">
-                    <h1>TRADING ARENA</h1>
-                    <div class="round-info" id="roundInfo">-</div>
-                    <span class="phase-badge lobby" id="phaseBadge">LOBBY</span>
-          </div>
+  <div class="top-bar">
+    <h1>TRADING ARENA</h1>
+    <div class="round-info" id="roundInfo">-</div>
+    <span class="phase-badge lobby" id="phaseBadge">LOBBY</span>
+  </div>
 
-          <div class="nw-tracker">
-                    <div class="nw-box you">
-                              <div class="nw-label" id="yourLabel">Your Net Worth</div>
-                              <div class="nw-value" id="yourNW" style="color:var(--green)">&pound;100,000</div>
-                    </div>
-                    <div class="nw-box">
-                              <div class="nw-label">Opponent Net Worth</div>
-                              <div class="nw-value" id="oppNW" style="color:var(--green)">&pound;100,000</div>
-                    </div>
-          </div>
+  <div class="nw-tracker">
+    <div class="nw-box you">
+      <div class="nw-label" id="yourLabel">Your Net Worth</div>
+      <div class="nw-value" id="yourNW" style="color:var(--green)">&pound;100,000</div>
+    </div>
+    <div class="nw-box">
+      <div class="nw-label">Opponent Net Worth</div>
+      <div class="nw-value" id="oppNW" style="color:var(--green)">&pound;100,000</div>
+    </div>
+  </div>
 
-          <div id="lobbyScreen" class="lobby-screen">
-                    <h2>TRADING ARENA</h2>
-                    <p class="pulse" id="lobbyMsg">Connecting to server ...</p>
-                    <p style="color: var(--muted); margin-top: 24px; font-size: 0.85rem;">Open this page in two browser
-                              tabs to
-                              play!</p>
-          </div>
+  <div id="menuScreen" class="menu-screen">
+    <h2>TRADING ARENA</h2>
+    <p>Select Game Mode</p>
+    <div class="menu-buttons">
+      <button class="menu-btn" onclick="selectMode('offline')">
+        <span class="menu-icon">&#129302;</span>
+        <span class="menu-label">Offline</span>
+        <span class="menu-desc">Play against AI</span>
+      </button>
+      <button class="menu-btn" onclick="selectMode('multiplayer')">
+        <span class="menu-icon">&#128101;</span>
+        <span class="menu-label">Multiplayer</span>
+        <span class="menu-desc">Play with a friend</span>
+      </button>
+    </div>
+  </div>
 
-          <div id="gameBoard" class="game-board hidden">
-                    <!-- YOUR SIDE -->
-                    <div class="player-zone">
-                              <div class="arena-zone" id="yourArena">
-                                        <div class="arena-label">&#9876; Your Battlefield</div>
-                                        <div class="arena-card-info" id="yourArenaCard">No actions assigned</div>
-                              </div>
-                              <div class="zone-title"><span class="dot"></span> YOUR HAND (SHOP)</div>
-                              <div class="card-grid" id="handGrid">
-                                        <div class="empty-state">No cards available</div>
-                              </div>
-                              <div class="zone-title"><span class="dot" style="background:var(--green)"></span> YOUR
-                                        BENCH (OWNED)</div>
-                              <div class="card-grid" id="benchGrid">
-                                        <div class="empty-state">No stocks owned</div>
-                              </div>
-                              <div class="action-panel" id="actionPanel">
-                                        <h3 id="actionTitle">Actions</h3>
-                                        <div id="actionContent"></div>
-                              </div>
-                    </div>
-                    <!-- OPPONENT SIDE -->
-                    <div class="player-zone" style="background: rgba(124,58,237,0.03);">
-                              <div class="arena-zone" style="border-color: #3d1f6e;">
-                                        <div class="arena-label" style="color: var(--red);">&#9876; Opponent Battlefield
-                                        </div>
-                                        <div class="arena-card-info" id="oppArenaCard">No card deployed</div>
-                              </div>
-                              <div class="zone-title"><span class="dot" style="background:var(--red)"></span> OPPONENT
-                                        BENCH</div>
-                              <div class="card-grid" id="oppBenchGrid">
-                                        <div class="empty-state">No stocks visible</div>
-                              </div>
-                              <div class="battle-log" id="battleLog">
-                                        <h3>Battle Log</h3>
-                                        <div id="logEntries">
-                                                  <div class="log-entry info">Waiting for game to start ...</div>
-                                        </div>
-                              </div>
-                    </div>
-          </div>
+  <div id="lobbyScreen" class="lobby-screen hidden">
+    <h2>TRADING ARENA</h2>
+    <p class="pulse" id="lobbyMsg">Connecting to server ...</p>
+    <p style="color: var(--muted); margin-top: 24px; font-size: 0.85rem;">Open this page in two browser
+      tabs to
+      play!</p>
+  </div>
 
-          <!-- Stock Chart Modal -->
-          <div class="modal-overlay hidden" id="chartModal">
-                    <div class="modal-content">
-                              <h3 id="chartModalTitle">Stock Price History</h3>
-                              <canvas id="stockChartCanvas"></canvas>
-                              <button class="cancel-btn" onclick="closeChartModal()">Close</button>
-                    </div>
-          </div>
+  <div id="gameBoard" class="game-board hidden">
+    <!-- YOUR SIDE -->
+    <div class="player-zone">
+      <div class="arena-zone" id="yourArena">
+        <div class="arena-label">&#9876; Your Battlefield</div>
+        <div class="arena-card-info" id="yourArenaCard">No actions assigned</div>
+      </div>
+      <div class="zone-title"><span class="dot"></span> YOUR HAND (SHOP)</div>
+      <div class="card-grid" id="handGrid">
+        <div class="empty-state">No cards available</div>
+      </div>
+      <div class="zone-title"><span class="dot" style="background:var(--green)"></span> YOUR
+        BENCH (OWNED)</div>
+      <div class="card-grid" id="benchGrid">
+        <div class="empty-state">No stocks owned</div>
+      </div>
+      <div class="action-panel" id="actionPanel">
+        <h3 id="actionTitle">Actions</h3>
+        <div id="actionContent"></div>
+      </div>
+    </div>
+    <!-- OPPONENT SIDE -->
+    <div class="player-zone" style="background: rgba(124,58,237,0.03);">
+      <div class="arena-zone" style="border-color: #3d1f6e;">
+        <div class="arena-label" style="color: var(--red);">&#9876; Opponent Battlefield
+        </div>
+        <div class="arena-card-info" id="oppArenaCard">No card deployed</div>
+      </div>
+      <div class="zone-title"><span class="dot" style="background:var(--red)"></span> OPPONENT
+        BENCH</div>
+      <div class="card-grid" id="oppBenchGrid">
+        <div class="empty-state">No stocks visible</div>
+      </div>
+      <div class="battle-log" id="battleLog">
+        <h3>Battle Log</h3>
+        <div id="logEntries">
+          <div class="log-entry info">Waiting for game to start ...</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-          <!-- Battle Result Overlay -->
-          <div class="battle-overlay hidden" id="battleOverlay">
-                    <div class="battle-overlay-content">
-                              <h2 class="battle-title" id="battleTitle">ROUND RESULTS</h2>
-                              <div class="battle-nw-display">
-                                        <div class="battle-nw-card you" id="battleYourNW">
-                                                  <div class="battle-nw-label">YOUR NET WORTH</div>
-                                                  <div class="battle-nw-value" id="battleYourNWValue">&pound;0</div>
-                                                  <div class="battle-nw-delta" id="battleYourDelta"></div>
-                                        </div>
-                                        <div class="battle-vs">VS</div>
-                                        <div class="battle-nw-card opp" id="battleOppNW">
-                                                  <div class="battle-nw-label">OPPONENT NET WORTH</div>
-                                                  <div class="battle-nw-value" id="battleOppNWValue">&pound;0</div>
-                                                  <div class="battle-nw-delta" id="battleOppDelta"></div>
-                                        </div>
-                              </div>
-                              <div class="battle-events" id="battleEvents"></div>
-                              <div class="battle-critical hidden" id="battleCritical">
-                                        <span class="critical-text">CRITICAL HIT!</span>
-                              </div>
-                              <button class="btn-continue" id="battleContinueBtn" onclick="closeBattleOverlay()">Continue</button>
-                    </div>
-          </div>
+  <!-- Stock Chart Modal -->
+  <div class="modal-overlay hidden" id="chartModal">
+    <div class="modal-content">
+      <h3 id="chartModalTitle">Stock Price History</h3>
+      <canvas id="stockChartCanvas"></canvas>
+      <button class="cancel-btn" onclick="closeChartModal()">Close</button>
+    </div>
+  </div>
 
-          <!-- Analytics Overlay -->
-          <div class="analytics-overlay hidden" id="analyticsOverlay">
-                    <div class="analytics-panel">
-                              <h2>ANALYTICS DASHBOARD</h2>
-                              <div class="winner-banner" id="winnerBanner"></div>
-                              <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
-                                        <div>
-                                                  <h3 style="text-align:center; color:var(--accent); margin-bottom:12px;"
-                                                            id="p1StatsTitle">You</h3>
-                                                  <div class="stats-grid" id="p1Stats"></div>
-                                        </div>
-                                        <div>
-                                                  <h3 style="text-align:center; color:var(--accent2); margin-bottom:12px;"
-                                                            id="p2StatsTitle">Opponent
-                                                  </h3>
-                                                  <div class="stats-grid" id="p2Stats"></div>
-                                        </div>
-                              </div>
-                              <div class="chart-container"><canvas id="nwChart"></canvas></div>
-                              <div class="insights-section" id="insightsSection">
-                                        <h3 class="insights-title">AI GAME INSIGHTS</h3>
-                                        <div class="insights-columns">
-                                                  <div class="insights-col">
-                                                            <h4 id="insightsP1Title">Your Insights</h4>
-                                                            <ul id="insightsP1"></ul>
-                                                  </div>
-                                                  <div class="insights-col">
-                                                            <h4 id="insightsP2Title">Opponent Insights</h4>
-                                                            <ul id="insightsP2"></ul>
-                                                  </div>
-                                        </div>
-                              </div>
-                              <div class="analytics-footer"><button class="btn-restart" onclick="restartGame()">Play
-                                                  Again</button></div>
-                    </div>
-          </div>
+  <!-- Analytics Overlay -->
+  <div class="analytics-overlay hidden" id="analyticsOverlay">
+    <div class="analytics-panel">
+      <h2>ANALYTICS DASHBOARD</h2>
+      <div class="winner-banner" id="winnerBanner"></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <div>
+          <h3 style="text-align:center; color:var(--accent); margin-bottom:12px;" id="p1StatsTitle">You</h3>
+          <div class="stats-grid" id="p1Stats"></div>
+        </div>
+        <div>
+          <h3 style="text-align:center; color:var(--accent2); margin-bottom:12px;" id="p2StatsTitle">Opponent
+          </h3>
+          <div class="stats-grid" id="p2Stats"></div>
+        </div>
+      </div>
+      <div class="chart-container"><canvas id="nwChart"></canvas></div>
+      <div class="analytics-footer"><button class="btn-restart" onclick="restartGame()">Play
+          Again</button></div>
+    </div>
+  </div>
 
-          <!-- JS modules (order matters: log first, then charts, renderer, actions, socket last) -->
-          <script src="{{ url_for('static', filename='js/log.js') }}"></script>
-            <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
-          <script src="{{ url_for('static', filename='js/renderer.js') }}"></script>
-          <script src="{{ url_for('static', filename='js/actions.js') }}"></script>
-          <script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
-          <script src="{{ url_for('static', filename='js/socket.js') }}"></script>
+  <!-- JS modules (order matters: log first, then charts, renderer, actions, socket last) -->
+  <script src="{{ url_for('static', filename='js/log.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/renderer.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/actions.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/socket.js') }}"></script>
 </body>
 
 </html>

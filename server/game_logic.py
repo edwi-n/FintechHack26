@@ -5,7 +5,9 @@ Round lifecycle: starting rounds, advancing phases,
 resolving battles, and ending the game.
 """
 
-from server.config import HAND_SIZE, INFLATION_RATE, TRADING_DAYS_QTR
+import random
+
+from server.config import CARD_BUY_COST_PCT, HAND_SIZE, INFLATION_RATE, MAX_BENCH, TRADING_DAYS_QTR
 from server.cards import generate_hand, generate_stock_card, pick_round_date
 from server.combat import calc_delta, calc_omega
 from server.game_state import game, player_state_for_client
@@ -49,6 +51,9 @@ def start_new_round(socketio):
         "msg": f"Round {game['round']}/{game['max_rounds']} — Buy Phase! "
         f"Market Date: {game['current_date']}"
     })
+    # Bot auto-play in offline mode
+    if game.get("mode") == "offline":
+        bot_play_buy_phase(socketio)
 
 
 def advance_to_action_phase(socketio):
@@ -62,6 +67,9 @@ def advance_to_action_phase(socketio):
     socketio.emit("server_message", {
         "msg": "Action Phase! Assign actions to your bench cards and target opponent cards."
     })
+    # Bot auto-play in offline mode
+    if game.get("mode") == "offline":
+        bot_play_action_phase(socketio)
 
 
 def resolve_battle(socketio):
@@ -207,6 +215,64 @@ def resolve_battle(socketio):
     else:
         socketio.sleep(8)
         start_new_round(socketio)
+
+
+# ──────────────────────────────────────────────
+# Bot AI (offline mode)
+# ──────────────────────────────────────────────
+
+def bot_play_buy_phase(socketio):
+    """Bot randomly buys cards during buy phase."""
+    bot = game["players"]["player_2"]
+    if not bot.get("is_bot"):
+        return
+
+    if bot["hand"]:
+        num_to_buy = random.randint(1, min(3, len(bot["hand"])))
+        for _ in range(num_to_buy):
+            if not bot["hand"] or len(bot["bench"]) >= MAX_BENCH:
+                break
+            idx = random.randint(0, len(bot["hand"]) - 1)
+            card = bot["hand"].pop(idx)
+            cost = round(card["s0"] * CARD_BUY_COST_PCT, 2)
+            bot["net_worth"] -= cost
+            bot["bench"].append(card)
+
+    bot["ready"] = True
+    broadcast_state(socketio)
+
+
+def bot_play_action_phase(socketio):
+    """Bot randomly assigns actions during action phase."""
+    bot = game["players"]["player_2"]
+    if not bot.get("is_bot"):
+        return
+
+    opp = game["players"]["player_1"]
+    possible_actions = ["place", "defense_put", "call"]
+
+    for i, card in enumerate(bot["bench"]):
+        if random.random() < 0.7:
+            action = random.choice(possible_actions)
+            if action == "call" and bot["net_worth"] > card["call_premium"]:
+                bot["net_worth"] -= card["call_premium"]
+                bot["net_worth"] = round(bot["net_worth"], 2)
+                bot["card_actions"][str(i)] = action
+            elif action == "defense_put" and bot["net_worth"] > card["put_premium"]:
+                bot["net_worth"] -= card["put_premium"]
+                bot["net_worth"] = round(bot["net_worth"], 2)
+                bot["card_actions"][str(i)] = action
+            elif action == "place":
+                bot["card_actions"][str(i)] = action
+
+    for card in opp["bench"]:
+        if random.random() < 0.3 and bot["net_worth"] > card["put_premium"]:
+            bot["attack_puts"].append(card["id"])
+            bot["net_worth"] -= card["put_premium"]
+            bot["net_worth"] = round(bot["net_worth"], 2)
+
+    bot["ready"] = True
+    broadcast_state(socketio)
 
 
 def end_game(socketio):

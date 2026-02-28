@@ -16,6 +16,7 @@ def fresh_player() -> dict:
     return {
         "sid": None,
         "connected": False,
+        "is_bot": False,
         "net_worth": STARTING_NW,
         "hand": [],
         "bench": [],
@@ -39,6 +40,7 @@ game: dict = {
     "round": 0,
     "max_rounds": MAX_ROUNDS,
     "phase": "lobby",
+    "mode": None,
     "date_idx": None,
     "current_date": "",
     "players": {
@@ -55,6 +57,7 @@ def reset_game():
         "round": 0,
         "max_rounds": MAX_ROUNDS,
         "phase": "lobby",
+        "mode": None,
         "date_idx": None,
         "current_date": "",
         "players": {
