@@ -6,12 +6,12 @@
 var myPlayerId = null;
 var myPlayerNum = 0;
 var currentState = null;
+var gameMode = null;
 
 var socket = io();
 
 socket.on('connect', function () {
           addLog('Connected to Trading Arena server!', 'gain');
-          document.getElementById('lobbyMsg').textContent = 'Connected! Waiting for opponent ...';
 });
 
 socket.on('disconnect', function () {
@@ -22,7 +22,11 @@ socket.on('player_assigned', function (data) {
           myPlayerId = data.player_id;
           myPlayerNum = data.player_num;
           document.getElementById('yourLabel').textContent = 'Player ' + myPlayerNum + ' - Your Net Worth';
-          document.getElementById('lobbyMsg').textContent = 'You are Player ' + myPlayerNum + '. Waiting for opponent ...';
+          document.getElementById('menuScreen').classList.add('hidden');
+          if (gameMode === 'multiplayer') {
+                    document.getElementById('lobbyScreen').classList.remove('hidden');
+                    document.getElementById('lobbyMsg').textContent = 'You are Player ' + myPlayerNum + '. Waiting for opponent ...';
+          }
           addLog('Assigned as Player ' + myPlayerNum, 'info');
 });
 
