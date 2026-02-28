@@ -118,22 +118,6 @@ button:disabled {
     color: var(--muted);
 }
 
-/* ── Phase Badge ── */
-
-.phase-badge {
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-.phase-badge.lobby   { background: #334155; color: #94a3b8; }
-.phase-badge.buy     { background: #164e63; color: #22d3ee; }
-.phase-badge.action  { background: #4c1d95; color: #c4b5fd; }
-.phase-badge.battle  { background: #7f1d1d; color: #fca5a5; }
-.phase-badge.end     { background: #854d0e; color: #fcd34d; }
-
 /* ── Net Worth Tracker ── */
 
 .nw-tracker {

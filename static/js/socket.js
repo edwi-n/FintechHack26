@@ -22,10 +22,17 @@ socket.on('player_assigned', function (data) {
           myPlayerId = data.player_id;
           myPlayerNum = data.player_num;
           document.getElementById('yourLabel').textContent = 'Player ' + myPlayerNum + ' - Your Net Worth';
-          document.getElementById('menuScreen').classList.add('hidden');
+          var menuEl = document.getElementById('menuScreen');
+          if (menuEl) menuEl.classList.add('hidden');
           if (gameMode === 'multiplayer') {
-                    document.getElementById('lobbyScreen').classList.remove('hidden');
-                    document.getElementById('lobbyMsg').textContent = 'You are Player ' + myPlayerNum + '. Waiting for opponent ...';
+                    var lobbyEl = document.getElementById('lobbyScreen');
+                    if (lobbyEl) {
+                              lobbyEl.classList.remove('hidden');
+                    }
+                    var lobbyMsg = document.getElementById('lobbyMsg');
+                    if (lobbyMsg) {
+                              lobbyMsg.textContent = 'You are Player ' + myPlayerNum + '. Waiting for opponent ...';
+                    }
           }
           addLog('Assigned as Player ' + myPlayerNum, 'info');
 });

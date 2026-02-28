@@ -14,23 +14,32 @@
           <div class="top-bar">
                     <h1>TRADING ARENA</h1>
                     <div class="round-info" id="roundInfo">-</div>
-                    <span class="phase-badge lobby" id="phaseBadge">LOBBY</span>
+          </div>
+
+          <!-- Mode Selection Menu -->
+          <div id="menuScreen" class="lobby-screen">
+                    <h2>TRADING ARENA</h2>
+                    <p style="color: var(--muted); margin-bottom: 32px; font-size: 1rem;">Choose your game mode</p>
+                    <div style="display: flex; gap: 16px; justify-content: center;">
+                              <button class="btn-ready" onclick="selectMode('offline')" style="padding: 14px 32px; font-size: 1rem;">Play vs AI</button>
+                              <button class="btn-restart" onclick="selectMode('multiplayer')" style="padding: 14px 32px; font-size: 1rem;">Multiplayer</button>
+                    </div>
           </div>
 
           <div class="nw-tracker">
                     <div class="nw-box you">
                               <div class="nw-label" id="yourLabel">Your Net Worth</div>
-                              <div class="nw-value" id="yourNW" style="color:var(--green)">&pound;100,000</div>
+                              <div class="nw-value" id="yourNW" style="color:var(--green)">&pound;1000</div>
                     </div>
                     <div class="nw-box">
                               <div class="nw-label">Opponent Net Worth</div>
-                              <div class="nw-value" id="oppNW" style="color:var(--green)">&pound;100,000</div>
+                              <div class="nw-value" id="oppNW" style="color:var(--green)">&pound;1000</div>
                     </div>
           </div>
 
-          <div id="lobbyScreen" class="lobby-screen">
+          <div id="lobbyScreen" class="lobby-screen hidden">
                     <h2>TRADING ARENA</h2>
-                    <p class="pulse" id="lobbyMsg">Connecting to server ...</p>
+                    <p class="pulse" id="lobbyMsg">Waiting for opponent ...</p>
                     <p style="color: var(--muted); margin-top: 24px; font-size: 0.85rem;">Open this page in two browser
                               tabs to play!</p>
           </div>
@@ -86,6 +95,31 @@
                     </div>
           </div>
 
+          <!-- Battle Result Overlay -->
+          <div class="battle-overlay hidden" id="battleOverlay">
+                    <div class="battle-overlay-content">
+                              <h2 class="battle-title" id="battleTitle">ROUND RESULTS</h2>
+                              <div class="battle-nw-display">
+                                        <div class="battle-nw-card you" id="battleYourNW">
+                                                  <div class="battle-nw-label">YOUR NET WORTH</div>
+                                                  <div class="battle-nw-value" id="battleYourNWValue">&pound;0</div>
+                                                  <div class="battle-nw-delta" id="battleYourDelta"></div>
+                                        </div>
+                                        <div class="battle-vs">VS</div>
+                                        <div class="battle-nw-card opp" id="battleOppNW">
+                                                  <div class="battle-nw-label">OPPONENT NET WORTH</div>
+                                                  <div class="battle-nw-value" id="battleOppNWValue">&pound;0</div>
+                                                  <div class="battle-nw-delta" id="battleOppDelta"></div>
+                                        </div>
+                              </div>
+                              <div class="battle-events" id="battleEvents"></div>
+                              <div class="battle-critical hidden" id="battleCritical">
+                                        <span class="critical-text">CRITICAL HIT!</span>
+                              </div>
+                              <button class="btn-continue" id="battleContinueBtn" onclick="closeBattleOverlay()">Continue</button>
+                    </div>
+          </div>
+
           <!-- Analytics Overlay -->
           <div class="analytics-overlay hidden" id="analyticsOverlay">
                     <div class="analytics-panel">
@@ -104,6 +138,19 @@
                                         </div>
                               </div>
                               <div class="chart-container"><canvas id="nwChart"></canvas></div>
+                              <div class="insights-section" id="insightsSection">
+                                        <h3 class="insights-title">AI GAME INSIGHTS</h3>
+                                        <div class="insights-columns">
+                                                  <div class="insights-col">
+                                                            <h4 id="insightsP1Title">Your Insights</h4>
+                                                            <ul id="insightsP1"></ul>
+                                                  </div>
+                                                  <div class="insights-col">
+                                                            <h4 id="insightsP2Title">Opponent Insights</h4>
+                                                            <ul id="insightsP2"></ul>
+                                                  </div>
+                                        </div>
+                              </div>
                               <div class="analytics-footer"><button class="btn-restart" onclick="restartGame()">Play
                                                   Again</button></div>
                     </div>

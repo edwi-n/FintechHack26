@@ -8,9 +8,6 @@
           toggleAttackPut, endBuyPhase, confirmActions */
 
 function renderState(s) {
-          var badge = document.getElementById('phaseBadge');
-          badge.textContent = s.phase.toUpperCase();
-          badge.className = 'phase-badge ' + s.phase;
           document.getElementById('roundInfo').textContent =
                     s.phase === 'lobby'
                               ? '-'
@@ -19,13 +16,16 @@ function renderState(s) {
           updateNW('yourNW', s.net_worth);
           updateNW('oppNW', s.opponent_nw);
 
+          var menuEl = document.getElementById('menuScreen');
+          var lobbyEl = document.getElementById('lobbyScreen');
+          var boardEl = document.getElementById('gameBoard');
           if (s.phase === 'lobby') {
-                    document.getElementById('lobbyScreen').classList.remove('hidden');
-                    document.getElementById('gameBoard').classList.add('hidden');
+                    if (lobbyEl) lobbyEl.classList.remove('hidden');
+                    if (boardEl) boardEl.classList.add('hidden');
           } else {
-                    document.getElementById('menuScreen').classList.add('hidden');
-                    document.getElementById('lobbyScreen').classList.add('hidden');
-                    document.getElementById('gameBoard').classList.remove('hidden');
+                    if (menuEl) menuEl.classList.add('hidden');
+                    if (lobbyEl) lobbyEl.classList.add('hidden');
+                    if (boardEl) boardEl.classList.remove('hidden');
           }
           renderHand(s.hand, s.phase);
           renderBench(s.bench, s.phase, s.card_actions, s.ready);
