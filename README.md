@@ -78,7 +78,7 @@ In the beginning, a random time before 2022 (this can be changed depending on th
 
 Stocks on the bench do not trigger options math, they just grow or shrink based on standard price movement.
 
-* **Formula:** $\omega = S_1 - S_0$ *(Note: I swapped $S_0 - S_1$ to $S_1 - S_0$ here so that if the new price is higher, $\omega$ is positive growth).*
+* **Formula:** $\omega = S_1 - S_0$ 
 * **Action:** Add $\omega$ to the owner's Net Worth.
 
 ### 2. Attack Put (Targeting Opponent's Stock)
