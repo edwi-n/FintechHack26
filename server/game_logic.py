@@ -225,15 +225,16 @@ def bot_play_buy_phase(socketio):
     if not bot.get("is_bot"):
         return
 
-    num_to_buy = random.randint(1, min(3, len(bot["hand"])))
-    for _ in range(num_to_buy):
-        if not bot["hand"] or len(bot["bench"]) >= MAX_BENCH:
-            break
-        idx = random.randint(0, len(bot["hand"]) - 1)
-        card = bot["hand"].pop(idx)
-        cost = round(card["s0"] * CARD_BUY_COST_PCT, 2)
-        bot["net_worth"] -= cost
-        bot["bench"].append(card)
+    if bot["hand"]:
+        num_to_buy = random.randint(1, min(3, len(bot["hand"])))
+        for _ in range(num_to_buy):
+            if not bot["hand"] or len(bot["bench"]) >= MAX_BENCH:
+                break
+            idx = random.randint(0, len(bot["hand"]) - 1)
+            card = bot["hand"].pop(idx)
+            cost = round(card["s0"] * CARD_BUY_COST_PCT, 2)
+            bot["net_worth"] -= cost
+            bot["bench"].append(card)
 
     bot["ready"] = True
     broadcast_state(socketio)
@@ -251,16 +252,19 @@ def bot_play_action_phase(socketio):
     for i, card in enumerate(bot["bench"]):
         if random.random() < 0.7:
             action = random.choice(possible_actions)
-            if action == "call":
+            if action == "call" and bot["net_worth"] > card["call_premium"]:
                 bot["net_worth"] -= card["call_premium"]
                 bot["net_worth"] = round(bot["net_worth"], 2)
-            elif action == "defense_put":
+                bot["card_actions"][str(i)] = action
+            elif action == "defense_put" and bot["net_worth"] > card["put_premium"]:
                 bot["net_worth"] -= card["put_premium"]
                 bot["net_worth"] = round(bot["net_worth"], 2)
-            bot["card_actions"][str(i)] = action
+                bot["card_actions"][str(i)] = action
+            elif action == "place":
+                bot["card_actions"][str(i)] = action
 
     for card in opp["bench"]:
-        if random.random() < 0.3:
+        if random.random() < 0.3 and bot["net_worth"] > card["put_premium"]:
             bot["attack_puts"].append(card["id"])
             bot["net_worth"] -= card["put_premium"]
             bot["net_worth"] = round(bot["net_worth"], 2)
