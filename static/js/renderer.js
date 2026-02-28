@@ -23,6 +23,7 @@ function renderState(s) {
                     document.getElementById('lobbyScreen').classList.remove('hidden');
                     document.getElementById('gameBoard').classList.add('hidden');
           } else {
+                    document.getElementById('menuScreen').classList.add('hidden');
                     document.getElementById('lobbyScreen').classList.add('hidden');
                     document.getElementById('gameBoard').classList.remove('hidden');
           }
