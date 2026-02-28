@@ -28,7 +28,24 @@
                     </div>
           </div>
 
-          <div id="lobbyScreen" class="lobby-screen">
+          <div id="menuScreen" class="menu-screen">
+                    <h2>TRADING ARENA</h2>
+                    <p>Select Game Mode</p>
+                    <div class="menu-buttons">
+                              <button class="menu-btn" onclick="selectMode('offline')">
+                                        <span class="menu-icon">&#129302;</span>
+                                        <span class="menu-label">Offline</span>
+                                        <span class="menu-desc">Play against AI</span>
+                              </button>
+                              <button class="menu-btn" onclick="selectMode('multiplayer')">
+                                        <span class="menu-icon">&#128101;</span>
+                                        <span class="menu-label">Multiplayer</span>
+                                        <span class="menu-desc">Play with a friend</span>
+                              </button>
+                    </div>
+          </div>
+
+          <div id="lobbyScreen" class="lobby-screen hidden">
                     <h2>TRADING ARENA</h2>
                     <p class="pulse" id="lobbyMsg">Connecting to server ...</p>
                     <p style="color: var(--muted); margin-top: 24px; font-size: 0.85rem;">Open this page in two browser

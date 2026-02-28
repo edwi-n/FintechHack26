@@ -31,38 +31,7 @@ def register_events(app, socketio):
     def handle_connect():
         from flask import request
         sid = request.sid
-
-        assigned = None
-        for pid in ("player_1", "player_2"):
-            p = game["players"][pid]
-            if not p["connected"]:
-                p["connected"] = True
-                p["sid"] = sid
-                assigned = pid
-                break
-
-        if assigned is None:
-            emit(
-                "error", {"msg": "Game is full! Two players already connected."})
-            return
-
-        num = 1 if assigned == "player_1" else 2
-        emit("player_assigned", {"player_id": assigned, "player_num": num})
-        print(f"[connect] {assigned} joined (sid={sid})")
-
-        socketio.emit("server_message", {
-            "msg": f"Player {num} has entered the arena!"
-        })
-
-        if all(game["players"][p]["connected"] for p in ("player_1", "player_2")):
-            socketio.emit("server_message", {
-                "msg": "Both players connected! Starting game …"
-            })
-            socketio.sleep(1)
-            start_new_round(socketio)
-        else:
-            emit("server_message", {
-                 "msg": "Waiting for opponent to connect …"})
+        print(f"[connect] Client connected (sid={sid})")
 
     @socketio.on("disconnect")
     def handle_disconnect():
@@ -76,6 +45,76 @@ def register_events(app, socketio):
                 socketio.emit("server_message", {
                               "msg": f"{pid} disconnected."})
                 break
+
+    # ── Mode Selection ──
+
+    @socketio.on("select_mode")
+    def handle_select_mode(data):
+        """Player selects offline or multiplayer mode."""
+        from flask import request
+        sid = request.sid
+        mode = data.get("mode", "multiplayer")
+
+        if mode == "offline":
+            p1 = game["players"]["player_1"]
+            if p1["connected"]:
+                emit("error", {"msg": "Game already in progress!"})
+                return
+
+            # Assign human as player_1
+            p1["connected"] = True
+            p1["sid"] = sid
+            emit("player_assigned", {"player_id": "player_1", "player_num": 1})
+
+            # Create bot for player_2
+            p2 = game["players"]["player_2"]
+            p2["connected"] = True
+            p2["is_bot"] = True
+
+            game["mode"] = "offline"
+
+            socketio.emit("server_message", {
+                "msg": "Offline mode! Playing against Trading Bot …"
+            })
+            socketio.sleep(1)
+            start_new_round(socketio)
+
+        else:
+            # Multiplayer: assign as next available player
+            assigned = None
+            for pid in ("player_1", "player_2"):
+                p = game["players"][pid]
+                if not p["connected"]:
+                    p["connected"] = True
+                    p["sid"] = sid
+                    assigned = pid
+                    break
+
+            if assigned is None:
+                emit("error", {
+                     "msg": "Game is full! Two players already connected."})
+                return
+
+            num = 1 if assigned == "player_1" else 2
+            emit("player_assigned", {"player_id": assigned,
+                 "player_num": num})
+            print(f"[select_mode] {assigned} joined multiplayer (sid={sid})")
+
+            game["mode"] = "multiplayer"
+
+            socketio.emit("server_message", {
+                "msg": f"Player {num} has entered the arena!"
+            })
+
+            if all(game["players"][p]["connected"] for p in ("player_1", "player_2")):
+                socketio.emit("server_message", {
+                    "msg": "Both players connected! Starting game …"
+                })
+                socketio.sleep(1)
+                start_new_round(socketio)
+            else:
+                emit("server_message", {
+                     "msg": "Waiting for opponent to connect …"})
 
     # ── Buy Phase ──
 
