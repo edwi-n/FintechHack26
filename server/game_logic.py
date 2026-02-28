@@ -149,12 +149,14 @@ def resolve_battle(socketio):
             f"{pid} bench movement: £{bench_total_omega:+,.2f}"
         )
 
-        # ── 4. Inflation penalty ──
-        inflation_penalty = round(p["net_worth"] * INFLATION_RATE, 2)
+        # ── 4. Inflation penalty (cash only, not stocks) ──
+        bench_stock_value = sum(c["s1"] for c in p["bench"])
+        cash_portion = max(0.0, p["net_worth"] - bench_stock_value)
+        inflation_penalty = round(cash_portion * INFLATION_RATE, 2)
         p["net_worth"] -= inflation_penalty
         p["net_worth"] = round(p["net_worth"], 2)
         results["events"].append(
-            f"{pid} inflation penalty: -£{inflation_penalty:,.2f}"
+            f"{pid} inflation penalty (on £{cash_portion:,.2f} cash): -£{inflation_penalty:,.2f}"
         )
 
         results[pid] = {
@@ -203,7 +205,7 @@ def resolve_battle(socketio):
     if game_over:
         end_game(socketio)
     else:
-        socketio.sleep(1)
+        socketio.sleep(8)
         start_new_round(socketio)
 
 
@@ -248,4 +250,134 @@ def end_game(socketio):
     else:
         winner = "draw"
 
-    socketio.emit("game_over", {"winner": winner, "analytics": analytics})
+    # Generate LLM-style insights for each player
+    insights = {}
+    for pid in ("player_1", "player_2"):
+        insights[pid] = _generate_insights(pid, analytics[pid], winner)
+
+    socketio.emit("game_over", {
+        "winner": winner,
+        "analytics": analytics,
+        "insights": insights,
+    })
+
+
+def _generate_insights(pid: str, analytics: dict, winner: str) -> list[str]:
+    """Generate LLM-style analytical insights based on game performance."""
+    insights = []
+    profit = analytics["total_profit"]
+    win_rate = analytics["options_win_rate"]
+    max_dd = analytics["max_drawdown"]
+    final_nw = analytics["final_nw"]
+    nw_hist = analytics["nw_history"]
+    trades = analytics["trade_history"]
+
+    # Overall performance
+    if profit > 0:
+        insights.append(
+            f"Strong portfolio growth of £{profit:,.2f} — "
+            f"a {profit / nw_hist[0] * 100:.1f}% return on starting capital."
+        )
+    elif profit < 0:
+        insights.append(
+            f"Portfolio declined by £{abs(profit):,.2f} — "
+            f"a {abs(profit) / nw_hist[0] * 100:.1f}% loss. "
+            f"Consider more defensive strategies next time."
+        )
+    else:
+        insights.append("Flat performance — perfectly hedged or no action taken.")
+
+    # Options strategy
+    if win_rate >= 70:
+        insights.append(
+            f"Exceptional options accuracy at {win_rate}% win rate. "
+            f"Your derivatives timing was superb."
+        )
+    elif win_rate >= 50:
+        insights.append(
+            f"Solid options play with a {win_rate}% win rate. "
+            f"Slightly above coin-flip odds indicates good market reads."
+        )
+    elif win_rate > 0:
+        insights.append(
+            f"Options win rate of {win_rate}% suggests room for improvement. "
+            f"Focus on reading stock momentum before committing premiums."
+        )
+
+    # Drawdown analysis
+    if max_dd > nw_hist[0] * 0.3:
+        insights.append(
+            f"Maximum drawdown of £{max_dd:,.2f} was significant — "
+            f"over 30% of starting capital. Consider using defense puts "
+            f"more aggressively to limit downside."
+        )
+    elif max_dd > 0:
+        insights.append(
+            f"Drawdown kept to £{max_dd:,.2f} — "
+            f"solid risk management throughout the game."
+        )
+
+    # Momentum analysis
+    if len(nw_hist) >= 3:
+        early_trend = nw_hist[len(nw_hist) // 2] - nw_hist[0]
+        late_trend = nw_hist[-1] - nw_hist[len(nw_hist) // 2]
+        if early_trend < 0 and late_trend > 0:
+            insights.append(
+                "Impressive comeback! Recovered from an early decline to "
+                "finish strong in the later rounds."
+            )
+        elif early_trend > 0 and late_trend < 0:
+            insights.append(
+                "Started strong but lost momentum in later rounds. "
+                "Adapting strategy mid-game could have preserved gains."
+            )
+
+    # Aggression analysis
+    total_attacks = sum(
+        t["actions"].get("attack_puts", 0) for t in trades
+    )
+    total_calls = sum(
+        1 for t in trades
+        for k, v in t["actions"].items()
+        if k != "attack_puts" and v == "call"
+    )
+    total_defenses = sum(
+        1 for t in trades
+        for k, v in t["actions"].items()
+        if k != "attack_puts" and v == "defense_put"
+    )
+
+    if total_attacks >= 3:
+        insights.append(
+            f"Highly aggressive playstyle with {total_attacks} attack puts deployed. "
+            f"{'It paid off!' if winner == pid else 'Sometimes offense alone isnt enough — balance with defense.'}"
+        )
+    if total_defenses >= 3:
+        insights.append(
+            f"Defensive strategist — {total_defenses} defense puts used to "
+            f"protect your net worth. A classic risk-averse approach."
+        )
+    if total_calls >= 3:
+        insights.append(
+            f"Bullish conviction with {total_calls} call options. "
+            f"You bet heavily on upward momentum."
+        )
+
+    # Win/Loss insight
+    if winner == pid:
+        insights.append(
+            "Congratulations on the victory! Your mix of offense and "
+            "risk management outperformed your opponent."
+        )
+    elif winner == "draw":
+        insights.append(
+            "A draw demonstrates equally matched strategies. "
+            "Next time, a single well-timed play could tip the balance."
+        )
+    else:
+        insights.append(
+            "Despite the loss, every round is a learning opportunity. "
+            "Review which rounds had the biggest swings and adjust."
+        )
+
+    return insights

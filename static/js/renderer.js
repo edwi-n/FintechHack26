@@ -35,6 +35,7 @@ function renderState(s) {
 
 function updateNW(id, value) {
           var el = document.getElementById(id);
+          var oldText = el.textContent;
           el.textContent = '\u00A3' + value.toLocaleString('en-GB', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -42,6 +43,12 @@ function updateNW(id, value) {
           if (value < 0) el.style.color = 'var(--red)';
           else if (value >= 100000) el.style.color = 'var(--green)';
           else el.style.color = 'var(--gold)';
+          // Flash on change
+          if (el.textContent !== oldText) {
+                    el.classList.remove('nw-flash');
+                    void el.offsetWidth; // reflow
+                    el.classList.add('nw-flash');
+          }
 }
 
 function renderHand(hand, phase) {
@@ -85,10 +92,10 @@ function renderBench(bench, phase, cardActions, ready) {
 
                     if (isAction) {
                               html += '<div class="card-action-row" onclick="event.stopPropagation()">';
-                              if (action !== 'place') html += '<button class="btn-place" onclick="setCardAction(' + i + ', \'place\')" title="Place">&#9876;</button>';
-                              if (action !== 'defense_put') html += '<button class="btn-defense" onclick="setCardAction(' + i + ', \'defense_put\')" title="Defense Put">&#128737;</button>';
-                              if (action !== 'call') html += '<button class="btn-call" onclick="setCardAction(' + i + ', \'call\')" title="Call">&#128200;</button>';
-                              if (hasAction) html += '<button class="btn-clear" onclick="setCardAction(' + i + ', null)" title="Clear">&#10005;</button>';
+                              if (action !== 'place') html += '<button class="btn-place" onclick="setCardAction(' + i + ', \'place\')">Place</button>';
+                              if (action !== 'defense_put') html += '<button class="btn-defense" onclick="setCardAction(' + i + ', \'defense_put\')">Def Put</button>';
+                              if (action !== 'call') html += '<button class="btn-call" onclick="setCardAction(' + i + ', \'call\')">Call</button>';
+                              if (hasAction) html += '<button class="btn-clear" onclick="setCardAction(' + i + ', null)">Clear</button>';
                               html += '</div>';
                     }
 
@@ -150,9 +157,9 @@ function renderOpponentBench(bench, phase, attackPuts, ready) {
                     if (isAction) {
                               html += '<div class="card-action-row" onclick="event.stopPropagation()">';
                               if (isTargeted) {
-                                        html += '<button class="btn-clear" onclick="toggleAttackPut(\'' + c.id + '\')" title="Cancel Attack Put">Cancel &#128165;</button>';
+                                        html += '<button class="btn-clear" onclick="toggleAttackPut(\'' + c.id + '\')">Cancel</button>';
                               } else {
-                                        html += '<button class="btn-attack" onclick="toggleAttackPut(\'' + c.id + '\')" title="Attack Put">&#128165; Attack Put</button>';
+                                        html += '<button class="btn-attack" onclick="toggleAttackPut(\'' + c.id + '\')">Atk Put</button>';
                               }
                               html += '</div>';
                     }
@@ -167,12 +174,12 @@ function renderActions(s) {
           var content = document.getElementById('actionContent');
 
           if (s.phase === 'buy') {
-                    title.textContent = 'Buy Phase';
+                    title.innerHTML = '<span class="phase-indicator buy">BUY PHASE</span>';
                     content.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;margin-bottom:12px;">Click <strong>Buy Card</strong> on cards in your hand. Cost: 5% of stock price.</p>' +
                               '<button class="btn-ready" onclick="endBuyPhase()"' + (s.ready ? ' disabled' : '') + '>' +
                               (s.ready ? 'Waiting for opponent...' : 'Done Buying \u2192 Ready') + '</button>';
           } else if (s.phase === 'action') {
-                    title.textContent = 'Action Phase';
+                    title.innerHTML = '<span class="phase-indicator action">ACTION PHASE</span>';
                     if (s.ready) {
                               content.innerHTML = '<p style="color:var(--gold);font-size:0.9rem;">Actions confirmed! Waiting for opponent...</p>';
                     } else {
@@ -187,10 +194,10 @@ function renderActions(s) {
                                         '<button class="btn-ready" onclick="confirmActions()">Confirm All Actions \u2192 Ready</button>';
                     }
           } else if (s.phase === 'battle') {
-                    title.textContent = 'Battle Phase';
+                    title.innerHTML = '<span class="phase-indicator battle">BATTLE PHASE</span>';
                     content.innerHTML = '<p style="color:var(--gold);font-size:0.9rem;">Resolving battle...</p>';
           } else {
-                    title.textContent = 'Actions';
+                    title.innerHTML = '<span class="phase-indicator">WAITING</span>';
                     content.innerHTML = '';
           }
 }
