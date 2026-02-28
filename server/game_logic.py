@@ -149,12 +149,15 @@ def resolve_battle(socketio):
             f"{pid} bench movement: £{bench_total_omega:+,.2f}"
         )
 
-        # ── 4. Inflation penalty ──
-        inflation_penalty = round(p["net_worth"] * INFLATION_RATE, 2)
+        # ── 4. Inflation penalty (applied to cash only, not invested stocks) ──
+        stock_value = sum(card["s0"] for card in p["bench"])
+        cash_subject_to_inflation = max(0.0, p["net_worth"] - stock_value)
+        inflation_penalty = round(cash_subject_to_inflation * INFLATION_RATE, 2)
         p["net_worth"] -= inflation_penalty
         p["net_worth"] = round(p["net_worth"], 2)
         results["events"].append(
-            f"{pid} inflation penalty: -£{inflation_penalty:,.2f}"
+            f"{pid} inflation penalty: -£{inflation_penalty:,.2f} "
+            f"(on £{cash_subject_to_inflation:,.2f} cash)"
         )
 
         results[pid] = {
