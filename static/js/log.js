@@ -1,6 +1,6 @@
 /**
- * Trading Arena — Battle Log Utility
- * Append entries to the on-screen battle log.
+ * Trading Arena — Trade Log Utility
+ * Append entries to the on-screen trade log.
  */
 
 function addLog(msg, cls) {

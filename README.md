@@ -28,26 +28,26 @@ The game revolves around managing a portfolio and deploying derivatives to attac
 
 **The Layout:**
 
-* **The Hand (Shop):** A pool of 5 randomly generated stocks available for purchase.
-* **The Bench (Owned):** Slots for stocks the player currently owns. Stocks sitting here passively grow/shrink based on market movement ($\omega$).
-* **The Battlefield (Arena):** The active zone where players place cards (Puts, Calls, or Place/Hold) to attack their opponent or defend their Net Worth (N.W.).
+* **The Market (Shop):** A pool of 5 randomly generated stocks available for purchase.
+* **Holdings (Owned):** Slots for stocks the player currently owns. Stocks sitting here passively grow/shrink based on market movement ($\omega$).
+* **The Portfolio (Arena):** The active zone where players assign actions (Puts, Calls, or Place/Hold) to attack their opponent or defend their Net Worth (N.W.).
 * **Net Worth (N.W.) Tracker:** The player's health bar. If it hits zero, they lose.
 
 ## 2. The Game Loop (State Machine)
 
 The game is split into two distinct phases.
-In the beginning, a random time before 2022 (this can be changed depending on the mode chosen at the start of the game) is chosen. Then 5 random stock at that time are placed on each player's hand. Then the game continues by going forward 3 months in that stock.
+In the beginning, a random time before 2022 (this can be changed depending on the mode chosen at the start of the game) is chosen. Then 5 random stocks at that time are placed in each player's market. Then the game continues by going forward 3 months in that stock.
 
 ### A. Ready Phase (Player Setup)
 
 1. **Initialize:** Define Game Mode and # of Rounds.
-2. **Buy Phase:** P1 and P2 can buy stocks from their "Hand" and move them to their "Bench".
-3. **Action Phase:** Players choose what to do in the Arena, they have the following options for every card in their bench:
-* *Place Card:* Deploy a standard stock to the battlefield.
+2. **Buy Phase:** P1 and P2 can buy stocks from their "Market" and move them to their "Holdings".
+3. **Action Phase:** Players choose what to do in the Portfolio, they have the following options for every asset in their holdings:
+* *Place Card:* Deploy a standard stock to the portfolio.
 * *Attack Put* Hedge your own stock.
 * *Call:* Deploy a Call option.
 * *Hold State:* Pass/Wait.
-  The player has the following options for every card in the opponents bench:
+  The player has the following options for every asset in the opponent's holdings:
 * *Attack Put* Target an opponent's stock.
 
   Each player can see the past 6 months' stock data for each stock.
@@ -61,18 +61,18 @@ In the beginning, a random time before 2022 (this can be changed depending on th
 ### B. Battle Phase (3 Months Later)
 
 1. **Time Jump:** The backend fetches updated stock prices ($S_1$).
-2. **Calculate Arena $\Delta$:** The game calculates the damage/shield value for P1 and P2 based on their deployed cards.
-3. **Calculate Bench $\omega$:** The intrinsic growth/loss of benched stocks is calculated and added to the player's Net Worth.
+2. **Calculate Arena $\Delta$:** The game calculates the damage/shield value for P1 and P2 based on their deployed assets.
+3. **Calculate Bench $\omega$:** The intrinsic growth/loss of held stocks is calculated and added to the player's Net Worth.
 4. **Inflation:** Deduct a flat inflation penalty from cash holdings.
-5. **Cleanup:** Return played cards to the bench (if applicable) and regenerate the Hand for the next round.
+5. **Cleanup:** Return played assets to holdings and regenerate the Market for the next round.
 
 ---
 
 ## 3. Combat Math & Equations
 
-### 1. The Bench (Passive Growth)
+### 1. The Holdings (Passive Growth)
 
-Stocks on the bench do not trigger options math, they just grow or shrink based on standard price movement.
+Stocks in holdings do not trigger options math, they just grow or shrink based on standard price movement.
 
 * **Formula:** $\omega = S_1 - S_0$ 
 * **Action:** Add $\omega$ to the owner's Net Worth.
@@ -87,7 +87,7 @@ You are betting the opponent's stock will crash.
 
 ### 3. Defense Put (Hedging Your Own Stock)
 
-You are protecting your benched stock from a crash.
+You are protecting your held stock from a crash.
 
 * **Formula:** $\Delta = \min(0, S_1 - S_0)$
 * **Action:** Add to your N.W.

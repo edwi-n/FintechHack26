@@ -20,9 +20,9 @@ def fresh_player() -> dict:
         "net_worth": STARTING_NW,
         "hand": [],
         "bench": [],
-        # Multi-action: one action per bench card
+        # Multi-action: one action per bench asset
         "card_actions": {},       # { bench_index_str: "place"|"defense_put"|"call" }
-        # Attack puts on opponent cards
+        # Attack puts on opponent assets
         "attack_puts": [],        # [ opponent_card_id, ... ]
         "ready": False,
         "trade_history": [],

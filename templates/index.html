@@ -4,7 +4,7 @@
 <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Trading Arena - FinTech Card Game</title>
+          <title>Trading Arena — Strategic Stock Battle</title>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
           <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
           <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
@@ -49,15 +49,15 @@
                     <!-- YOUR SIDE -->
                     <div class="player-zone">
                               <div class="arena-zone" id="yourArena">
-                                        <div class="arena-label">&#9876; Your Battlefield</div>
+                                        <div class="arena-label">&#9876; Your Portfolio</div>
                                         <div class="arena-card-info" id="yourArenaCard">No actions assigned</div>
                               </div>
-                              <div class="zone-title"><span class="dot"></span> YOUR HAND (SHOP)</div>
+                              <div class="zone-title"><span class="dot"></span> MARKET (SHOP)</div>
                               <div class="card-grid" id="handGrid">
-                                        <div class="empty-state">No cards available</div>
+                                        <div class="empty-state">No assets available</div>
                               </div>
                               <div class="zone-title"><span class="dot" style="background:var(--green)"></span> YOUR
-                                        BENCH (OWNED)</div>
+                                        HOLDINGS (OWNED)</div>
                               <div class="card-grid" id="benchGrid">
                                         <div class="empty-state">No stocks owned</div>
                               </div>
@@ -69,17 +69,17 @@
                     <!-- OPPONENT SIDE -->
                     <div class="player-zone" style="background: rgba(124,58,237,0.03);">
                               <div class="arena-zone" style="border-color: #3d1f6e;">
-                                        <div class="arena-label" style="color: var(--red);">&#9876; Opponent Battlefield
+                                        <div class="arena-label" style="color: var(--red);">&#9876; Opponent Portfolio
                                         </div>
                                         <div class="arena-card-info" id="oppArenaCard">No card deployed</div>
                               </div>
                               <div class="zone-title"><span class="dot" style="background:var(--red)"></span> OPPONENT
-                                        BENCH</div>
+                                        HOLDINGS</div>
                               <div class="card-grid" id="oppBenchGrid">
                                         <div class="empty-state">No stocks visible</div>
                               </div>
                               <div class="battle-log" id="battleLog">
-                                        <h3>Battle Log</h3>
+                                        <h3>Trade Log</h3>
                                         <div id="logEntries">
                                                   <div class="log-entry info">Waiting for game to start ...</div>
                                         </div>

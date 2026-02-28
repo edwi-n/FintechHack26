@@ -10,7 +10,7 @@
 function renderState(s) {
           document.getElementById('roundInfo').textContent =
                     s.phase === 'lobby'
-                              ? '-'
+                              ? ''
                               : 'Round ' + s.round + ' / ' + s.max_rounds +
                               (s.current_date ? '  |  Market Date: ' + s.current_date : '');
           updateNW('yourNW', s.net_worth);
@@ -55,7 +55,7 @@ function updateNW(id, value) {
 function renderHand(hand, phase) {
           var grid = document.getElementById('handGrid');
           if (!hand || hand.length === 0) {
-                    grid.innerHTML = '<div class="empty-state">No cards in hand</div>';
+                    grid.innerHTML = '<div class="empty-state">No assets in market</div>';
                     return;
           }
           grid.innerHTML = hand.map(function (card, i) {
@@ -64,7 +64,7 @@ function renderHand(hand, phase) {
                               '<div class="price">\u00A3' + card.s0.toFixed(2) + '</div>' +
                               '<div class="meta">' + (card.date_start || '') + '</div>' +
                               '<div class="premiums">Call: \u00A3' + card.call_premium.toFixed(2) + '<br>Put: \u00A3' + card.put_premium.toFixed(2) + '</div>' +
-                              (phase === 'buy' ? '<button class="card-btn btn-primary" onclick="event.stopPropagation(); buyStock(' + i + ')">Buy Card</button>' : '') +
+                              (phase === 'buy' ? '<button class="card-btn btn-primary" onclick="event.stopPropagation(); buyStock(' + i + ')">Buy Asset</button>' : '') +
                               '</div>';
           }).join('');
 }
@@ -72,7 +72,7 @@ function renderHand(hand, phase) {
 function renderBench(bench, phase, cardActions, ready) {
           var grid = document.getElementById('benchGrid');
           if (!bench || bench.length === 0) {
-                    grid.innerHTML = '<div class="empty-state">No stocks on bench</div>';
+                    grid.innerHTML = '<div class="empty-state">No assets held</div>';
                     return;
           }
           var isAction = phase === 'action' && !ready;
@@ -139,7 +139,7 @@ function renderArena(s) {
 function renderOpponentBench(bench, phase, attackPuts, ready) {
           var grid = document.getElementById('oppBenchGrid');
           if (!bench || bench.length === 0) {
-                    grid.innerHTML = '<div class="empty-state">Opponent has no stocks</div>';
+                    grid.innerHTML = '<div class="empty-state">Opponent has no assets</div>';
                     return;
           }
           var isAction = phase === 'action' && !ready;
@@ -176,7 +176,7 @@ function renderActions(s) {
 
           if (s.phase === 'buy') {
                     title.innerHTML = '<span class="phase-indicator buy">BUY PHASE</span>';
-                    content.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;margin-bottom:12px;">Click <strong>Buy Card</strong> on cards in your hand. Cost: 5% of stock price.</p>' +
+                    content.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;margin-bottom:12px;">Click <strong>Buy Asset</strong> on assets in the market. Cost: 5% of stock price.</p>' +
                               '<button class="btn-ready" onclick="endBuyPhase()"' + (s.ready ? ' disabled' : '') + '>' +
                               (s.ready ? 'Waiting for opponent...' : 'Done Buying \u2192 Ready') + '</button>';
           } else if (s.phase === 'action') {
@@ -186,8 +186,8 @@ function renderActions(s) {
                     } else {
                               var numActions = Object.keys(s.card_actions).length + (s.attack_puts ? s.attack_puts.length : 0);
                               content.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;margin-bottom:12px;">' +
-                                        'Assign actions to each bench card using the buttons on each card. ' +
-                                        'Attack Put buttons are on opponent\'s cards.' +
+                                        'Assign actions to each asset using the buttons. ' +
+                                        'Attack Put buttons are on opponent\'s assets.' +
                                         '</p>' +
                                         '<p style="color:var(--text);font-size:0.85rem;margin-bottom:12px;">' +
                                         '<strong>' + numActions + '</strong> action(s) assigned' +
