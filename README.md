@@ -1,5 +1,17 @@
 # FintechHack26
 
+* [ ] inflation only occurs on cash and not stocks
+* [ ] generate llm insights after game end
+* [ ] menu at the start to select offline, multiplayer, rounds ...
+* [ ] animations & sound effects ( )
+* [ ] change icons
+* [ ] change button in the top right
+* [ ] bigger text
+* [ ] implement a simple quant algorithm for ai player
+* [ ] news tab
+* [ ] don't show results immediately, instead the screen darkens and have animations for net worth and critical hits...
+* [ ] emotes
+
 Category 1:
 Data in Finance - Financial markets generate vast amounts of data, yet turning that information into meaningful insight remains a challenge.
 <br>
@@ -110,25 +122,5 @@ When the round limit is reached, the game renders the Category 1 Analytics Dashb
 * **Options Win Rate** (Percentage of Calls/Puts that resulted in positive damage/defense).
 * **Max Drawdown** (Peak-to-trough drop in N.W.).
 * **Graph of Portfolio Value** (Line chart tracking N.W. over the rounds).
-
----
-
-## 5. Technical Requirements Checklists
-
-**Backend (Python)**
-
-* [ ] Initialize `Flask-SocketIO` server.
-* [ ] Create in-memory dictionary to hold game state (P1 N.W., P2 N.W., Benches, Arena).
-* [ ] Write `fetch_prices()` function using `yfinance` to grab $S_0$ and $S_1$ for random historical 3-month windows.
-* [ ] Write a simplified Black-Scholes function to return the Premium cost when an option is played.
-* [ ] Write `resolve_turn()` function to execute the $\Delta$ and $\omega$ math simultaneously and broadcast the new N.W. to both players.
-
-**Frontend (React/JS)**
-
-* [ ] Connect to Python backend via `socket.io-client`.
-* [ ] Build Drag-and-Drop (or click-to-select) UI for moving cards from Hand $\rightarrow$ Bench $\rightarrow$ Battlefield.
-* [ ] Create UI components for "Buy Card", "Play Call", "Play Put", etc.
-* [ ] Implement a state array `trade_history` to log every turn's outcome.
-* [ ] Install Recharts or Tremor to render the final Analytics Dashboard based on `trade_history`.
 
 ---
