@@ -1,15 +1,13 @@
 # FintechHack26
 
-* [ ] inflation only occurs on cash and not stocks
 * [ ] generate llm insights after game end
-* [ ] animations & sound effects ( )
-* [ ] change icons
 * [ ] change button in the top right
 * [ ] bigger text
 * [ ] implement a simple quant algorithm for ai player
 * [ ] news tab
 * [ ] don't show results immediately, instead the screen darkens and have animations for net worth and critical hits...
 * [ ] emotes
+* [ ] redo ui so looks slightly better
 
 Category 1:
 Data in Finance - Financial markets generate vast amounts of data, yet turning that information into meaningful insight remains a challenge.
