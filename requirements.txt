@@ -1,0 +1,6 @@
+flask
+flask-socketio
+yfinance
+numpy
+pandas
+scipy
