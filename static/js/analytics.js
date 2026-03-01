@@ -253,6 +253,23 @@ function showAnalytics(data) {
           if (data.insights) {
                     renderInsights(data.insights, oppId);
           }
+
+          // Request LLM-powered deep analysis
+          requestLLMInsights();
+}
+
+function requestLLMInsights() {
+          var section = document.getElementById('llmInsightsSection');
+          var loading = document.getElementById('llmInsightsLoading');
+          var content = document.getElementById('llmInsightsContent');
+          var error = document.getElementById('llmInsightsError');
+
+          section.style.display = '';
+          loading.classList.remove('hidden');
+          content.classList.add('hidden');
+          error.classList.add('hidden');
+
+          socket.emit('request_llm_insights', { player_id: myPlayerId });
 }
 
 function renderPlayerStats(id, a) {
@@ -281,4 +298,49 @@ function renderInsights(insights, oppId) {
           p2List.innerHTML = oppInsights.map(function(insight) {
                     return '<li class="insight-item">' + insight + '</li>';
           }).join('');
+}
+
+/* ── LLM Insights Rendering ── */
+function handleLLMInsights(data) {
+          var loading = document.getElementById('llmInsightsLoading');
+          var content = document.getElementById('llmInsightsContent');
+          var error = document.getElementById('llmInsightsError');
+
+          loading.classList.add('hidden');
+
+          if (data.content) {
+                    content.innerHTML = renderMarkdown(data.content);
+                    content.classList.remove('hidden');
+          } else {
+                    error.classList.remove('hidden');
+          }
+}
+
+function renderMarkdown(md) {
+          // Simple markdown to HTML converter for LLM output
+          var html = md
+                    // Escape HTML entities
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    // Headers
+                    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+                    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+                    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+                    // Bold and italic
+                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                    // Unordered lists
+                    .replace(/^[*\-] (.+)$/gm, '<li>$1</li>')
+                    // Ordered lists
+                    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+                    // Wrap consecutive <li> in <ul>
+                    .replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>')
+                    // Horizontal rules
+                    .replace(/^---+$/gm, '<hr>')
+                    // Line breaks for remaining lines
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br>');
+
+          return '<p>' + html + '</p>';
 }
