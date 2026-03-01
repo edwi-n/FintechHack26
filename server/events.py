@@ -334,3 +334,62 @@ def register_events(app, socketio):
         socketio.emit("server_message", {
                       "msg": "Game reset! Waiting for players …"})
         socketio.emit("game_reset", {})
+
+ # ── LLM Insights ──
+
+    @socketio.on("request_llm_insights")
+    def handle_request_llm_insights(data):
+        """Generate LLM-powered post-game strategy analysis."""
+        from flask import request as flask_request
+        from server.llm_insights import generate_llm_insights
+
+        pid = data.get("player_id")
+        if game["phase"] != "end":
+            emit("error", {"msg": "Game is not over yet."})
+            return
+        if pid not in ("player_1", "player_2"):
+            emit("error", {"msg": "Invalid player."})
+            return
+
+        opp_id = "player_2" if pid == "player_1" else "player_1"
+        p = game["players"][pid]
+        opp = game["players"][opp_id]
+
+        # Build analytics dicts (same as end_game)
+        def _build_analytics(player):
+            nw_hist = player["nw_history"]
+            total_profit = nw_hist[-1] - nw_hist[0]
+            peak = nw_hist[0]
+            max_dd = 0
+            for nw in nw_hist:
+                if nw > peak:
+                    peak = nw
+                dd = peak - nw
+                if dd > max_dd:
+                    max_dd = dd
+            win_rate = (
+                round(player["options_won"] / player["options_played"] * 100, 1)
+                if player["options_played"] > 0 else 0
+            )
+            return {
+                "total_profit": round(total_profit, 2),
+                "options_win_rate": win_rate,
+                "max_drawdown": round(max_dd, 2),
+                "nw_history": nw_hist,
+                "trade_history": player["trade_history"],
+                "final_nw": nw_hist[-1],
+            }
+
+        analytics = _build_analytics(p)
+        opp_analytics = _build_analytics(opp)
+
+        # Determine winner
+        if p["net_worth"] > opp["net_worth"]:
+            winner = pid
+        elif opp["net_worth"] > p["net_worth"]:
+            winner = opp_id
+        else:
+            winner = "draw"
+
+        result = generate_llm_insights(pid, analytics, opp_analytics, winner)
+        emit("llm_insights", {"player_id": pid, "content": result})
