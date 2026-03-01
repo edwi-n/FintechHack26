@@ -122,7 +122,7 @@ function showBattleResult(result) {
           var oppId = myPlayerId === 'player_1' ? 'player_2' : 'player_1';
           var oppData = result[oppId];
 
-          // Still log events to battle log
+          // Still log events to trade log
           addLog('--- Round ' + result.round + ' Battle Results ---', 'info');
           result.events.forEach(function (evt) {
                     var cls = evt.indexOf('damage') !== -1 ? 'damage'

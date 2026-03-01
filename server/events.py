@@ -253,7 +253,7 @@ def register_events(app, socketio):
                 target_card = c
                 break
         if target_card is None:
-            emit("error", {"msg": "Target card not found on opponent bench."})
+            emit("error", {"msg": "Target asset not found in opponent holdings."})
             return
 
         if target_id in p["attack_puts"]:

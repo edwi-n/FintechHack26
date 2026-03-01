@@ -36,7 +36,7 @@ def start_new_round(socketio):
     for pid in ("player_1", "player_2"):
         p = game["players"][pid]
         p["hand"] = generate_hand(HAND_SIZE, target_date=round_date)
-        # Re-roll existing bench cards to the new date
+        # Re-roll existing bench assets to the new date
         new_bench = []
         for card in p["bench"]:
             new_card = generate_stock_card(
@@ -65,7 +65,7 @@ def advance_to_action_phase(socketio):
         game["players"][pid]["attack_puts"] = []
     broadcast_state(socketio)
     socketio.emit("server_message", {
-        "msg": "Action Phase! Assign actions to your bench cards and target opponent cards."
+        "msg": "Action Phase! Assign actions to your assets and target opponent assets."
     })
     # Bot auto-play in offline mode
     if game.get("mode") == "offline":
@@ -73,7 +73,7 @@ def advance_to_action_phase(socketio):
 
 
 def resolve_battle(socketio):
-    """Both players locked in — resolve ALL actions for ALL cards."""
+    """Both players locked in — resolve ALL actions for ALL assets."""
     game["phase"] = "battle"
     results = {"round": game["round"], "events": [],
                "player_1": {}, "player_2": {}}
@@ -96,9 +96,13 @@ def resolve_battle(socketio):
             if action in ("place", "call"):
                 opp["net_worth"] -= delta
                 total_arena_delta += delta
+                if delta > 0:
+                    outcome = f"Dealt £{delta:,.2f} damage!"
+                else:
+                    outcome = "No damage — stock moved the wrong way!"
                 results["events"].append(
                     f"{pid} used {action.upper()} on {card['ticker']} "
-                    f"(£{card['s0']}->£{card['s1']}). Dealt £{delta:,.2f} damage!"
+                    f"(£{card['s0']}->£{card['s1']}). {outcome}"
                 )
                 if action == "call":
                     p["options_played"] += 1
@@ -108,15 +112,19 @@ def resolve_battle(socketio):
             elif action == "defense_put":
                 p["net_worth"] += delta
                 total_arena_delta += delta
+                if delta > 0:
+                    outcome = f"Recovered £{delta:,.2f}!"
+                else:
+                    outcome = "No recovery — stock moved the wrong way!"
                 results["events"].append(
                     f"{pid} used DEFENSE PUT on {card['ticker']} "
-                    f"(£{card['s0']}->£{card['s1']}). Recovered £{delta:,.2f}!"
+                    f"(£{card['s0']}->£{card['s1']}). {outcome}"
                 )
                 p["options_played"] += 1
                 if delta > 0:
                     p["options_won"] += 1
 
-        # ── 2. Process attack_puts (targeting opponent cards by ID) ──
+        # ── 2. Process attack_puts (targeting opponent assets by ID) ──
         for target_id in p["attack_puts"]:
             target_card = None
             for c in opp["bench"]:
@@ -128,18 +136,22 @@ def resolve_battle(socketio):
             delta = calc_delta("attack_put", target_card)
             opp["net_worth"] -= delta
             total_arena_delta += delta
+            if delta > 0:
+                outcome = f"Dealt £{delta:,.2f} damage!"
+            else:
+                outcome = "No damage — stock moved the wrong way!"
             results["events"].append(
                 f"{pid} used ATTACK PUT on {target_card['ticker']} "
-                f"(£{target_card['s0']}->£{target_card['s1']}). Dealt £{delta:,.2f} damage!"
+                f"(£{target_card['s0']}->£{target_card['s1']}). {outcome}"
             )
             p["options_played"] += 1
             if delta > 0:
                 p["options_won"] += 1
 
         if len(p["card_actions"]) == 0 and len(p["attack_puts"]) == 0:
-            results["events"].append(f"{pid} chose to HOLD all cards.")
+            results["events"].append(f"{pid} chose to HOLD all assets.")
 
-        # ── 3. Bench omega (passive movement for ALL bench cards) ──
+        # ── 3. Bench omega (passive movement for ALL bench assets) ──
         bench_total_omega = 0.0
         bench_details = []
         for card in p["bench"]:
@@ -188,7 +200,7 @@ def resolve_battle(socketio):
             "nw_after": p["net_worth"],
         })
 
-    # ── 6. Return placed cards to bench ──
+    # ── 6. Return placed assets to bench ──
     for pid in ("player_1", "player_2"):
         p = game["players"][pid]
         for idx_str, action in p["card_actions"].items():
@@ -222,7 +234,7 @@ def resolve_battle(socketio):
 # ──────────────────────────────────────────────
 
 def bot_play_buy_phase(socketio):
-    """Bot randomly buys cards during buy phase."""
+    """Bot randomly buys assets during buy phase."""
     bot = game["players"]["player_2"]
     if not bot.get("is_bot"):
         return

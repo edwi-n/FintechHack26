@@ -1,8 +1,8 @@
 """
-Trading Arena — Card / Stock Helpers
+Trading Arena — Asset / Stock Helpers
 ======================================
-Generates stock cards from historical data, manages round dates,
-and prepares card data for the client.
+Generates stock assets from historical data, manages round dates,
+and prepares asset data for the client.
 """
 
 import random
