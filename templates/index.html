@@ -4,7 +4,7 @@
 <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Trading Arena — Strategic Stock Battle</title>
+          <title>$TOCK MARKET — Terminal</title>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
           <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
           <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
@@ -12,17 +12,17 @@
 
 <body>
           <div class="top-bar">
-                    <h1>TRADING ARENA</h1>
+                    <h1>$TOCK MARKET</h1>
                     <div class="round-info" id="roundInfo">-</div>
           </div>
 
           <!-- Mode Selection Menu -->
           <div id="menuScreen" class="lobby-screen">
-                    <h2>TRADING ARENA</h2>
-                    <p style="color: var(--muted); margin-bottom: 32px; font-size: 1rem;">Choose your game mode</p>
+                    <h2>$TOCK MARKET</h2>
+                    <p style="color: var(--muted); margin-bottom: 32px; font-size: 0.8rem; letter-spacing: 2px;">SELECT MODE</p>
                     <div style="display: flex; gap: 16px; justify-content: center;">
-                              <button class="btn-ready" onclick="selectMode('offline')" style="padding: 14px 32px; font-size: 1rem;">Play vs AI</button>
-                              <button class="btn-restart" onclick="selectMode('multiplayer')" style="padding: 14px 32px; font-size: 1rem;">Multiplayer</button>
+                              <button class="btn-ready" onclick="selectMode('offline')" style="padding: 14px 32px;">PLAY VS AI</button>
+                              <button class="btn-restart" onclick="selectMode('multiplayer')" style="padding: 14px 32px;">MULTIPLAYER</button>
                     </div>
           </div>
 
@@ -38,7 +38,7 @@
           </div>
 
           <div id="lobbyScreen" class="lobby-screen hidden">
-                    <h2>TRADING ARENA</h2>
+                    <h2>$TOCK MARKET</h2>
                     <p class="pulse" id="lobbyMsg">Waiting for opponent ...</p>
                     <p style="color: var(--muted); margin-top: 24px; font-size: 0.85rem;">Open this page in two browser
                               tabs to
@@ -67,8 +67,8 @@
                               </div>
                     </div>
                     <!-- OPPONENT SIDE -->
-                    <div class="player-zone" style="background: rgba(124,58,237,0.03);">
-                              <div class="arena-zone" style="border-color: #3d1f6e;">
+                    <div class="player-zone">
+                              <div class="arena-zone">
                                         <div class="arena-label" style="color: var(--red);">&#9876; Opponent Portfolio
                                         </div>
                                         <div class="arena-card-info" id="oppArenaCard">No card deployed</div>
@@ -124,10 +124,10 @@
           <!-- Analytics Overlay -->
           <div class="analytics-overlay hidden" id="analyticsOverlay">
                     <div class="analytics-panel">
-                              <h2>ANALYTICS DASHBOARD</h2>
+                              <h2>POST-GAME ANALYSIS</h2>
                               <div class="winner-banner" id="winnerBanner"></div>
                               <div>
-                                        <h3 style="text-align:center; color:var(--accent); margin-bottom:12px;"
+                                        <h3 style="text-align:center; color:var(--accent); margin-bottom:12px; letter-spacing:2px;"
                                                   id="p1StatsTitle">Your Performance</h3>
                                         <div class="stats-grid" id="p1Stats" style="grid-template-columns:repeat(4,1fr);"></div>
                               </div>
