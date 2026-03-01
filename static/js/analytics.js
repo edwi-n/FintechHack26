@@ -282,8 +282,6 @@ function renderPlayerStats(id, a) {
 function renderInsights(insights) {
           var myInsights = insights[myPlayerId] || [];
 
-          document.getElementById('insightsP1Title').textContent = 'Your Strategy Analysis';
-
           var p1List = document.getElementById('insightsP1');
 
           p1List.innerHTML = myInsights.map(function(insight) {
