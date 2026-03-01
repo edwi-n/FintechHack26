@@ -341,46 +341,46 @@ def _generate_insights(pid: str, analytics: dict, winner: str) -> list[str]:
     # Overall performance
     if profit > 0:
         insights.append(
-            f"Strong portfolio growth of £{profit:,.2f} — "
-            f"a {profit / nw_hist[0] * 100:.1f}% return on starting capital."
+            f"You grew your portfolio by £{profit:,.2f} — "
+            f"a {profit / nw_hist[0] * 100:.1f}% return on your starting capital."
         )
     elif profit < 0:
         insights.append(
-            f"Portfolio declined by £{abs(profit):,.2f} — "
+            f"Your portfolio declined by £{abs(profit):,.2f} — "
             f"a {abs(profit) / nw_hist[0] * 100:.1f}% loss. "
-            f"Consider more defensive strategies next time."
+            f"Consider playing more defensively next time."
         )
     else:
-        insights.append("Flat performance — perfectly hedged or no action taken.")
+        insights.append("You finished flat — either perfectly hedged or you held back.")
 
     # Options strategy
     if win_rate >= 70:
         insights.append(
-            f"Exceptional options accuracy at {win_rate}% win rate. "
+            f"Your options accuracy was exceptional at {win_rate}% win rate. "
             f"Your derivatives timing was superb."
         )
     elif win_rate >= 50:
         insights.append(
-            f"Solid options play with a {win_rate}% win rate. "
-            f"Slightly above coin-flip odds indicates good market reads."
+            f"You played options solidly with a {win_rate}% win rate. "
+            f"Being above coin-flip odds shows you read the market well."
         )
     elif win_rate > 0:
         insights.append(
-            f"Options win rate of {win_rate}% suggests room for improvement. "
-            f"Focus on reading stock momentum before committing premiums."
+            f"Your options win rate of {win_rate}% suggests room for improvement. "
+            f"Try reading stock momentum more carefully before committing premiums."
         )
 
     # Drawdown analysis
     if max_dd > nw_hist[0] * 0.3:
         insights.append(
-            f"Maximum drawdown of £{max_dd:,.2f} was significant — "
-            f"over 30% of starting capital. Consider using defense puts "
-            f"more aggressively to limit downside."
+            f"Your maximum drawdown of £{max_dd:,.2f} was significant — "
+            f"over 30% of your starting capital. Consider using defense puts "
+            f"more aggressively to limit your downside."
         )
     elif max_dd > 0:
         insights.append(
-            f"Drawdown kept to £{max_dd:,.2f} — "
-            f"solid risk management throughout the game."
+            f"You kept your drawdown to £{max_dd:,.2f} — "
+            f"solid risk management on your part."
         )
 
     # Momentum analysis
@@ -389,13 +389,13 @@ def _generate_insights(pid: str, analytics: dict, winner: str) -> list[str]:
         late_trend = nw_hist[-1] - nw_hist[len(nw_hist) // 2]
         if early_trend < 0 and late_trend > 0:
             insights.append(
-                "Impressive comeback! Recovered from an early decline to "
+                "Great comeback! You recovered from an early decline to "
                 "finish strong in the later rounds."
             )
         elif early_trend > 0 and late_trend < 0:
             insights.append(
-                "Started strong but lost momentum in later rounds. "
-                "Adapting strategy mid-game could have preserved gains."
+                "You started strong but lost momentum in later rounds. "
+                "Try adapting your strategy mid-game to preserve your gains."
             )
 
     # Aggression analysis
@@ -415,35 +415,35 @@ def _generate_insights(pid: str, analytics: dict, winner: str) -> list[str]:
 
     if total_attacks >= 3:
         insights.append(
-            f"Highly aggressive playstyle with {total_attacks} attack puts deployed. "
-            f"{'It paid off!' if winner == pid else 'Sometimes offense alone isnt enough — balance with defense.'}"
+            f"You played very aggressively with {total_attacks} attack puts deployed. "
+            f"{'It paid off!' if winner == pid else 'Sometimes offence alone isn\'t enough — try balancing with defense.'}"
         )
     if total_defenses >= 3:
         insights.append(
-            f"Defensive strategist — {total_defenses} defense puts used to "
+            f"You were a defensive strategist — {total_defenses} defense puts used to "
             f"protect your net worth. A classic risk-averse approach."
         )
     if total_calls >= 3:
         insights.append(
-            f"Bullish conviction with {total_calls} call options. "
+            f"You showed bullish conviction with {total_calls} call options. "
             f"You bet heavily on upward momentum."
         )
 
     # Win/Loss insight
     if winner == pid:
         insights.append(
-            "Congratulations on the victory! Your mix of offense and "
+            "Congratulations on your victory! Your mix of offence and "
             "risk management outperformed your opponent."
         )
     elif winner == "draw":
         insights.append(
-            "A draw demonstrates equally matched strategies. "
-            "Next time, a single well-timed play could tip the balance."
+            "You drew — you and your opponent were equally matched. "
+            "Next time, a single well-timed play could tip the balance in your favour."
         )
     else:
         insights.append(
-            "Despite the loss, every round is a learning opportunity. "
-            "Review which rounds had the biggest swings and adjust."
+            "You lost this one, but every round is a learning opportunity. "
+            "Review which rounds had the biggest swings and adjust your approach."
         )
 
     return insights

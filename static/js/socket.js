@@ -58,6 +58,10 @@ socket.on('game_over', function (data) {
           showAnalytics(data);
 });
 
+socket.on('llm_insights', function (data) {
+          handleLLMInsights(data);
+});
+
 socket.on('game_reset', function () {
           location.reload();
 });

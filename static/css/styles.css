@@ -760,6 +760,106 @@ button:disabled {
     border-left: 3px solid var(--accent2);
 }
 
+/* ── LLM Insights Section ── */
+
+.llm-insights-section {
+    background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(6,182,212,0.06));
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(124,58,237,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.llm-insights-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--gold));
+}
+
+.llm-insights-title {
+    text-align: center;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--gold), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+}
+
+.llm-insights-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.llm-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(124,58,237,0.2);
+    border-top: 2px solid var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.llm-insights-content {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--text);
+}
+
+.llm-insights-content h1,
+.llm-insights-content h2,
+.llm-insights-content h3 {
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin: 16px 0 8px;
+    letter-spacing: 0.5px;
+}
+
+.llm-insights-content h1:first-child,
+.llm-insights-content h2:first-child,
+.llm-insights-content h3:first-child {
+    margin-top: 0;
+}
+
+.llm-insights-content ul,
+.llm-insights-content ol {
+    padding-left: 20px;
+    margin: 8px 0;
+}
+
+.llm-insights-content li {
+    margin-bottom: 6px;
+}
+
+.llm-insights-content strong {
+    color: var(--gold);
+}
+
+.llm-insights-content p {
+    margin: 8px 0;
+}
+
+.llm-insights-error {
+    text-align: center;
+    padding: 16px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
 /* ── Animations ── */
 
 @keyframes fadeIn {

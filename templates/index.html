@@ -20,11 +20,11 @@
   <div class="nw-tracker">
     <div class="nw-box you">
       <div class="nw-label" id="yourLabel">Your Net Worth</div>
-      <div class="nw-value" id="yourNW" style="color:var(--green)">&pound;100,000</div>
+      <div class="nw-value" id="yourNW" style="color:var(--green)">&pound;1,000</div>
     </div>
     <div class="nw-box">
       <div class="nw-label">Opponent Net Worth</div>
-      <div class="nw-value" id="oppNW" style="color:var(--green)">&pound;100,000</div>
+      <div class="nw-value" id="oppNW" style="color:var(--green)">&pound;1,000</div>
     </div>
   </div>
 
@@ -121,6 +121,35 @@
         </div>
       </div>
       <div class="chart-container"><canvas id="nwChart"></canvas></div>
+
+      <!-- Template Insights (instant) -->
+      <div class="insights-section">
+        <h3 class="insights-title">STRATEGY INSIGHTS</h3>
+        <div class="insights-columns">
+          <div class="insights-col">
+            <h4 id="insightsP1Title">Your Strategy Analysis</h4>
+            <ul id="insightsP1"></ul>
+          </div>
+          <div class="insights-col">
+            <h4 id="insightsP2Title">Opponent Strategy Analysis</h4>
+            <ul id="insightsP2"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- LLM Deep Analysis (async) -->
+      <div class="llm-insights-section" id="llmInsightsSection">
+        <h3 class="llm-insights-title">AI STRATEGY ADVISOR</h3>
+        <div class="llm-insights-loading" id="llmInsightsLoading">
+          <div class="llm-spinner"></div>
+          <span>Analysing your trading strategy with AI...</span>
+        </div>
+        <div class="llm-insights-content hidden" id="llmInsightsContent"></div>
+        <div class="llm-insights-error hidden" id="llmInsightsError">
+          <span>AI analysis unavailable. Set OPENAI_API_KEY to enable.</span>
+        </div>
+      </div>
+
       <div class="analytics-footer"><button class="btn-restart" onclick="restartGame()">Play
           Again</button></div>
     </div>
