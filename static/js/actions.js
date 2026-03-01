@@ -13,6 +13,11 @@ function buyStock(i) {
           socket.emit('buy_stock', { player_id: myPlayerId, card_index: i });
 }
 
+function sellStock(i) {
+          playSound('buy');
+          socket.emit('sell_stock', { player_id: myPlayerId, card_index: i });
+}
+
 function endBuyPhase() {
           playSound('confirm');
           socket.emit('end_buy_phase', { player_id: myPlayerId });
