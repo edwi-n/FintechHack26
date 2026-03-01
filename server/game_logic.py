@@ -11,6 +11,15 @@ from server.config import CARD_BUY_COST_PCT, HAND_SIZE, INFLATION_RATE, MAX_BENC
 from server.cards import generate_hand, generate_stock_card, pick_round_date
 from server.combat import calc_delta, calc_omega
 from server.game_state import game, player_state_for_client
+from server.ai_engine import (
+    get_ai_move,
+    is_available as ai_engine_available,
+    MOVE_ATTACK_PUT,
+    MOVE_DEFENSE_PUT,
+    MOVE_CALL,
+    MOVE_PLACE,
+    MOVE_TO_ACTION,
+)
 
 
 def broadcast_state(socketio):
@@ -230,16 +239,45 @@ def resolve_battle(socketio):
 
 
 # ──────────────────────────────────────────────
-# Bot AI (offline mode)
+# Bot AI (offline mode — powered by C++ engine)
 # ──────────────────────────────────────────────
 
 def bot_play_buy_phase(socketio):
-    """Bot randomly buys assets during buy phase."""
+    """Bot buys assets during buy phase using C++ AI heuristic.
+
+    Strategy: buy cards greedily up to bench limit, preferring cards
+    with higher volatility (sigma) since the AI's dominant Defense Put
+    strategy benefits most from volatile stocks (larger hedge payoffs).
+    Falls back to random selection if the engine is unavailable.
+    """
     bot = game["players"]["player_2"]
     if not bot.get("is_bot"):
         return
 
-    if bot["hand"]:
+    if not bot["hand"]:
+        bot["ready"] = True
+        broadcast_state(socketio)
+        return
+
+    if ai_engine_available():
+        # Sort hand by sigma (descending) — higher vol = better for DefPut
+        ranked = sorted(
+            enumerate(bot["hand"]),
+            key=lambda pair: pair[1].get("sigma", 0),
+            reverse=True,
+        )
+        # Buy as many as affordable / bench allows (AI wants max bench)
+        for _orig_idx, card in ranked:
+            if len(bot["bench"]) >= MAX_BENCH:
+                break
+            cost = round(card["s0"] * CARD_BUY_COST_PCT, 2)
+            if bot["net_worth"] - cost < 100:
+                continue  # keep a cash buffer
+            bot["hand"].remove(card)
+            bot["net_worth"] -= cost
+            bot["bench"].append(card)
+    else:
+        # Fallback: random buy
         num_to_buy = random.randint(1, min(3, len(bot["hand"])))
         for _ in range(num_to_buy):
             if not bot["hand"] or len(bot["bench"]) >= MAX_BENCH:
@@ -255,33 +293,93 @@ def bot_play_buy_phase(socketio):
 
 
 def bot_play_action_phase(socketio):
-    """Bot randomly assigns actions during action phase."""
+    """Bot assigns actions using the C++ backtesting AI heuristic.
+
+    For each bench card, queries the C++ engine with:
+      • price lookback (card's S0)
+      • bot's current NW
+      • opponent's current NW
+
+    The engine returns the optimal move type, which is mapped to
+    the game's action system.  Attack Put moves are redirected to
+    target the opponent's most valuable bench card.
+    """
     bot = game["players"]["player_2"]
     if not bot.get("is_bot"):
         return
 
     opp = game["players"]["player_1"]
-    possible_actions = ["place", "defense_put", "call"]
 
-    for i, card in enumerate(bot["bench"]):
-        if random.random() < 0.7:
-            action = random.choice(possible_actions)
-            if action == "call" and bot["net_worth"] > card["call_premium"]:
-                bot["net_worth"] -= card["call_premium"]
-                bot["net_worth"] = round(bot["net_worth"], 2)
-                bot["card_actions"][str(i)] = action
-            elif action == "defense_put" and bot["net_worth"] > card["put_premium"]:
+    if ai_engine_available():
+        # Build a price lookback from all bench cards' S0 values
+        lookback = [card["s0"] for card in bot["bench"]]
+
+        for i, card in enumerate(bot["bench"]):
+            # Query C++ AI for this card
+            move = get_ai_move(
+                lookback,
+                bot["net_worth"],
+                opp["net_worth"],
+            )
+
+            if move == MOVE_ATTACK_PUT:
+                # Redirect to opponent bench — target highest-value card
+                best_target = None
+                best_s0 = -1.0
+                for opp_card in opp["bench"]:
+                    if (opp_card["id"] not in bot["attack_puts"]
+                            and opp_card["s0"] > best_s0):
+                        best_s0 = opp_card["s0"]
+                        best_target = opp_card
+                if (best_target is not None
+                        and bot["net_worth"] > best_target["put_premium"]):
+                    bot["attack_puts"].append(best_target["id"])
+                    bot["net_worth"] -= best_target["put_premium"]
+                    bot["net_worth"] = round(bot["net_worth"], 2)
+                else:
+                    # Can't attack — fall back to defense put
+                    if bot["net_worth"] > card["put_premium"]:
+                        bot["net_worth"] -= card["put_premium"]
+                        bot["net_worth"] = round(bot["net_worth"], 2)
+                        bot["card_actions"][str(i)] = "defense_put"
+
+            elif move == MOVE_DEFENSE_PUT:
+                if bot["net_worth"] > card["put_premium"]:
+                    bot["net_worth"] -= card["put_premium"]
+                    bot["net_worth"] = round(bot["net_worth"], 2)
+                    bot["card_actions"][str(i)] = "defense_put"
+
+            elif move == MOVE_CALL:
+                if bot["net_worth"] > card["call_premium"]:
+                    bot["net_worth"] -= card["call_premium"]
+                    bot["net_worth"] = round(bot["net_worth"], 2)
+                    bot["card_actions"][str(i)] = "call"
+
+            elif move == MOVE_PLACE:
+                bot["card_actions"][str(i)] = "place"
+
+    else:
+        # Fallback: random actions (original behaviour)
+        possible_actions = ["place", "defense_put", "call"]
+        for i, card in enumerate(bot["bench"]):
+            if random.random() < 0.7:
+                action = random.choice(possible_actions)
+                if action == "call" and bot["net_worth"] > card["call_premium"]:
+                    bot["net_worth"] -= card["call_premium"]
+                    bot["net_worth"] = round(bot["net_worth"], 2)
+                    bot["card_actions"][str(i)] = action
+                elif action == "defense_put" and bot["net_worth"] > card["put_premium"]:
+                    bot["net_worth"] -= card["put_premium"]
+                    bot["net_worth"] = round(bot["net_worth"], 2)
+                    bot["card_actions"][str(i)] = action
+                elif action == "place":
+                    bot["card_actions"][str(i)] = action
+
+        for card in opp["bench"]:
+            if random.random() < 0.3 and bot["net_worth"] > card["put_premium"]:
+                bot["attack_puts"].append(card["id"])
                 bot["net_worth"] -= card["put_premium"]
                 bot["net_worth"] = round(bot["net_worth"], 2)
-                bot["card_actions"][str(i)] = action
-            elif action == "place":
-                bot["card_actions"][str(i)] = action
-
-    for card in opp["bench"]:
-        if random.random() < 0.3 and bot["net_worth"] > card["put_premium"]:
-            bot["attack_puts"].append(card["id"])
-            bot["net_worth"] -= card["put_premium"]
-            bot["net_worth"] = round(bot["net_worth"], 2)
 
     bot["ready"] = True
     broadcast_state(socketio)
@@ -363,7 +461,8 @@ def _generate_insights(pid: str, analytics: dict, winner: str) -> list[str]:
             f"Consider more defensive strategies next time."
         )
     else:
-        insights.append("Flat performance — perfectly hedged or no action taken.")
+        insights.append(
+            "Flat performance — perfectly hedged or no action taken.")
 
     # Options strategy
     if win_rate >= 70:
