@@ -126,31 +126,17 @@
                     <div class="analytics-panel">
                               <h2>ANALYTICS DASHBOARD</h2>
                               <div class="winner-banner" id="winnerBanner"></div>
-                              <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
-                                        <div>
-                                                  <h3 style="text-align:center; color:var(--accent); margin-bottom:12px;"
-                                                            id="p1StatsTitle">You</h3>
-                                                  <div class="stats-grid" id="p1Stats"></div>
-                                        </div>
-                                        <div>
-                                                  <h3 style="text-align:center; color:var(--accent2); margin-bottom:12px;"
-                                                            id="p2StatsTitle">Opponent
-                                                  </h3>
-                                                  <div class="stats-grid" id="p2Stats"></div>
-                                        </div>
+                              <div>
+                                        <h3 style="text-align:center; color:var(--accent); margin-bottom:12px;"
+                                                  id="p1StatsTitle">Your Performance</h3>
+                                        <div class="stats-grid" id="p1Stats" style="grid-template-columns:repeat(4,1fr);"></div>
                               </div>
                               <div class="chart-container"><canvas id="nwChart"></canvas></div>
                               <div class="insights-section" id="insightsSection">
-                                        <h3 class="insights-title">AI GAME INSIGHTS</h3>
-                                        <div class="insights-columns">
-                                                  <div class="insights-col">
-                                                            <h4 id="insightsP1Title">Your Insights</h4>
-                                                            <ul id="insightsP1"></ul>
-                                                  </div>
-                                                  <div class="insights-col">
-                                                            <h4 id="insightsP2Title">Opponent Insights</h4>
-                                                            <ul id="insightsP2"></ul>
-                                                  </div>
+                                        <h3 class="insights-title">YOUR STRATEGY INSIGHTS</h3>
+                                        <div class="insights-col">
+                                                  <h4 id="insightsP1Title">Strategy Analysis</h4>
+                                                  <ul id="insightsP1"></ul>
                                         </div>
                               </div>
                               <div class="llm-insights-section" id="llmInsightsSection" style="display:none;">

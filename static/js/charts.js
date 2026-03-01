@@ -60,7 +60,7 @@ function closeChartModal() {
           if (stockChart) { stockChart.destroy(); stockChart = null; }
 }
 
-function renderNWChart(my, opp) {
+function renderNWChart(my) {
           var ctx = document.getElementById('nwChart').getContext('2d');
           var labels = my.map(function (_, i) { return i === 0 ? 'Start' : 'R' + i; });
           if (nwChart) nwChart.destroy();
@@ -69,14 +69,13 @@ function renderNWChart(my, opp) {
                     data: {
                               labels: labels,
                               datasets: [
-                                        { label: 'Your NW', data: my, borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.1)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#00d4ff' },
-                                        { label: 'Opponent NW', data: opp, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.1)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#7c3aed' },
+                                        { label: 'Your Portfolio', data: my, borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.1)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#00d4ff' },
                               ],
                     },
                     options: {
                               responsive: true,
                               plugins: {
-                                        title: { display: true, text: 'Portfolio Value Over Time', color: '#e2e8f0', font: { size: 14 } },
+                                        title: { display: true, text: 'Your Portfolio Value Over Time', color: '#e2e8f0', font: { size: 14 } },
                                         legend: { labels: { color: '#94a3b8' } },
                               },
                               scales: {

@@ -744,6 +744,92 @@ button:disabled {
     border-left: 3px solid var(--accent2);
 }
 
+/* ── LLM Insights Section ── */
+
+.llm-insights-section {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+}
+
+#llmInsightsLoading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 32px 0;
+}
+
+#llmInsightsLoading span {
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+}
+
+.llm-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: llmSpin 0.8s linear infinite;
+}
+
+@keyframes llmSpin {
+    to { transform: rotate(360deg); }
+}
+
+#llmInsightsContent {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--text);
+}
+
+#llmInsightsContent h1,
+#llmInsightsContent h2,
+#llmInsightsContent h3 {
+    color: var(--accent);
+    margin: 16px 0 8px;
+    letter-spacing: 1px;
+}
+
+#llmInsightsContent h1 { font-size: 1.1rem; }
+#llmInsightsContent h2 { font-size: 0.95rem; }
+#llmInsightsContent h3 { font-size: 0.85rem; }
+
+#llmInsightsContent ul {
+    list-style: none;
+    padding: 0;
+}
+
+#llmInsightsContent li {
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    border-left: 3px solid var(--accent2);
+}
+
+#llmInsightsContent strong {
+    color: var(--gold);
+}
+
+#llmInsightsContent hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+}
+
+#llmInsightsError {
+    text-align: center;
+    padding: 24px 0;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: italic;
+}
+
 /* ── Animations ── */
 
 @keyframes fadeIn {
