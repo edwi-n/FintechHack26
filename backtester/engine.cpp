@@ -273,6 +273,18 @@ extern "C"
                                                g_state.p1_nw, g_state.p2_nw);
           }
 
+          /* ── get_ai_move_ex ────────────────────────────────────────────────────── *
+           *  Extended AI move — accepts NW values directly so the caller can
+           *  supply the real game state instead of relying on the internal
+           *  global GameState.  Used by the live game server's offline bot.
+           * ────────────────────────────────────────────────────────────────────────── */
+          EXPORT int get_ai_move_ex(float *prices, int num_prices,
+                                    float my_nw, float opp_nw)
+          {
+                    ensure_seeded();
+                    return compute_ai_decision(prices, num_prices, my_nw, opp_nw);
+          }
+
           /* ── Accessors ──────────────────────────────────────────────────────────── */
           EXPORT float get_p1_nw() { return g_state.p1_nw; }
           EXPORT float get_p2_nw() { return g_state.p2_nw; }
