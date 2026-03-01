@@ -115,3 +115,59 @@ When the round limit is reached, the game renders the Category 1 Analytics Dashb
 * **Graph of Portfolio Value** (Line chart tracking N.W. over the rounds).
 
 ---
+
+## 5. Installation & Setup
+
+### Prerequisites
+
+- **Python 3.10+**
+- **g++ (64-bit)** — required only for the offline AI backtester
+
+### 1. Clone & install dependencies
+
+```bash
+git clone <repo-url>
+cd FintechHack26
+pip install -r requirements.txt
+```
+
+### 2. Compile the C++ backtesting engine (optional — offline mode AI)
+
+The offline bot is powered by a C++ heuristic engine. Compile it to enable the smart AI opponent:
+
+**Windows (MinGW-w64):**
+
+```powershell
+# Install a 64-bit compiler if you only have 32-bit MinGW:
+winget install BrechtSanders.WinLibs.POSIX.UCRT
+
+# Compile (must match your Python architecture — typically 64-bit):
+cd backtester
+x86_64-w64-mingw32-g++ -shared -O2 -o engine.dll engine.cpp
+```
+
+**Linux / macOS:**
+
+```bash
+cd backtester
+g++ -shared -fPIC -O2 -o engine.so engine.cpp
+```
+
+> **Note:** If the DLL/SO is missing, offline mode falls back to a random-move bot.
+
+### 3. Run the server
+
+```bash
+python app.py
+```
+
+The game starts at [http://localhost:5000](http://localhost:5000).
+
+### 4. Run the backtester (standalone)
+
+```bash
+cd backtester
+python backtest.py
+```
+
+This runs 10,000 simulated games and prints AI win rate, average profit, and max drawdown.
