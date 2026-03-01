@@ -173,6 +173,64 @@ python app.py
 
 Open [http://localhost:5000](http://localhost:5000) in your browser.
 
+### Play vs AI (offline)
+
+1. Open [http://localhost:5000](http://localhost:5000)
+2. Click **"Play vs AI"**
+3. You are Player 1; the C++ bot plays as Player 2 automatically
+
+### Play Multiplayer (two players)
+
+Multiplayer uses Socket.IO — both players connect to the **same server**.
+
+#### Same machine (local)
+
+1. Start the server: `python app.py`
+2. Open **two browser tabs** to [http://localhost:5000](http://localhost:5000)
+3. In **both tabs**, click **"Multiplayer"**
+4. The first tab becomes Player 1, the second becomes Player 2
+5. The game starts once both players are connected
+
+#### Same network (LAN)
+
+1. Find the host machine's local IP:
+   ```powershell
+   # Windows
+   ipconfig     # look for IPv4 Address (e.g. 192.168.1.42)
+   ```
+   ```bash
+   # Linux / macOS
+   hostname -I
+   ```
+2. Start the server on the host: `python app.py`
+3. On the **second device**, open `http://<host-ip>:5000` (e.g. `http://192.168.1.42:5000`)
+4. Both players click **"Multiplayer"**
+5. Game starts when both are connected
+
+> **Note:** Both devices must be on the same Wi-Fi / network. The server binds to `0.0.0.0:5000`, so it accepts connections from any device on the LAN.
+
+#### Over the internet
+
+To play with someone on a different network, expose port 5000 using one of these methods:
+
+| Method | Command / Steps |
+|--------|----------------|
+| **ngrok** (recommended) | `ngrok http 5000` — gives a public URL like `https://abc123.ngrok.io` |
+| **localtunnel** | `npx localtunnel --port 5000` |
+| **Port forwarding** | Forward port 5000 on your router to your machine's local IP |
+
+Share the public URL with the other player. Both click **"Multiplayer"** to start.
+
+#### Multiplayer flow
+
+```
+Player 1 opens page → clicks "Multiplayer" → enters lobby (waiting...)
+Player 2 opens page → clicks "Multiplayer" → joins lobby
+                                             → game starts automatically
+```
+
+Both players go through Buy Phase and Action Phase simultaneously. Each phase advances when **both** players click their ready/confirm button. If one player disconnects, the other is notified via the trade log.
+
 ### Run the backtester (standalone)
 
 ```bash
