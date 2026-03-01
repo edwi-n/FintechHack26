@@ -60,22 +60,26 @@ function closeChartModal() {
           if (stockChart) { stockChart.destroy(); stockChart = null; }
 }
 
-function renderNWChart(my) {
+function renderNWChart(my, opp) {
           var ctx = document.getElementById('nwChart').getContext('2d');
           var labels = my.map(function (_, i) { return i === 0 ? 'Start' : 'R' + i; });
           if (nwChart) nwChart.destroy();
+          var datasets = [
+                    { label: 'Your Portfolio', data: my, borderColor: '#00FF41', backgroundColor: 'rgba(0,255,65,0.05)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#00FF41' },
+          ];
+          if (opp) {
+                    datasets.push({ label: 'Opponent', data: opp, borderColor: '#FF003C', backgroundColor: 'rgba(255,0,60,0.05)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#FF003C', borderDash: [6, 3] });
+          }
           nwChart = new Chart(ctx, {
                     type: 'line',
                     data: {
                               labels: labels,
-                              datasets: [
-                                        { label: 'Your Portfolio', data: my, borderColor: '#00FF41', backgroundColor: 'rgba(0,255,65,0.05)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#00FF41' },
-                              ],
+                              datasets: datasets,
                     },
                     options: {
                               responsive: true,
                               plugins: {
-                                        title: { display: true, text: 'Your Portfolio Value Over Time', color: '#E0E0E0', font: { size: 14, family: 'monospace' } },
+                                        title: { display: true, text: 'Portfolio Value Over Time', color: '#E0E0E0', font: { size: 14, family: 'monospace' } },
                                         legend: { labels: { color: '#888888', font: { size: 12 } } },
                               },
                               scales: {

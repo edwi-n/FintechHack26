@@ -245,7 +245,7 @@ function showAnalytics(data) {
           var oppId = myPlayerId === 'player_1' ? 'player_2' : 'player_1';
           renderPlayerStats('p1Stats', data.analytics[myPlayerId]);
           document.getElementById('p1StatsTitle').textContent = 'Your Performance';
-          renderNWChart(data.analytics[myPlayerId].nw_history);
+          renderNWChart(data.analytics[myPlayerId].nw_history, data.analytics[oppId].nw_history);
 
           // Render LLM insights
           if (data.insights) {
