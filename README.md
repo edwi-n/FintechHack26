@@ -3,7 +3,6 @@
 * [ ] generate llm insights after game end
 * [ ] bigger text
 * [ ] news tab
-* [ ] emotes
 * [ ] redo ui so looks slightly better
 
 Category 1:
