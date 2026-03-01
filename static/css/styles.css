@@ -20,8 +20,8 @@
     --green: #00FF41;
     --red: #FF003C;
     --gold: #FFB800;
-    --text: #C8C8C8;
-    --muted: #555555;
+    --text: #E0E0E0;
+    --muted: #888888;
     --border: #333333;
     --radius: 0px;
 }
@@ -33,6 +33,8 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     letter-spacing: 0.02em;
+    font-size: 15px;
+    line-height: 1.6;
 }
 
 /* ── Buttons ── */
@@ -41,9 +43,9 @@ button {
     cursor: pointer;
     border: 1px solid var(--border);
     font-family: inherit;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 700;
-    padding: 6px 12px;
+    padding: 8px 14px;
     border-radius: 0;
     transition: all 0.1s;
     text-transform: uppercase;
@@ -183,7 +185,7 @@ button:disabled {
 }
 .nw-box      { text-align: center; flex: 1; }
 .nw-box.you  { border-right: 1px solid var(--border); }
-.nw-label    { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 3px; }
+.nw-label    { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; }
 .nw-value    { font-size: 1.8rem; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; }
 
 /* ── Game Board ── */
@@ -201,9 +203,9 @@ button:disabled {
 .player-zone:last-child { border-right: none; }
 
 .zone-title {
-    font-size: 0.65rem;
+    font-size: 0.78rem;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     color: var(--muted);
     margin-bottom: 12px;
     display: flex;
@@ -270,17 +272,17 @@ button:disabled {
     background: var(--red);
 }
 
-.stock-card .ticker   { font-size: 0.95rem; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
-.stock-card .price    { font-size: 1.1rem; font-weight: 700; margin-top: 4px; color: var(--text); font-variant-numeric: tabular-nums; }
-.stock-card .meta     { font-size: 0.6rem; color: var(--muted); margin-top: 3px; letter-spacing: 0.5px; }
-.stock-card .premiums { font-size: 0.6rem; color: var(--muted); margin-top: 4px; line-height: 1.5; }
-.stock-card .card-btn { margin-top: 6px; width: 100%; padding: 5px; font-size: 0.65rem; }
+.stock-card .ticker   { font-size: 1rem; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
+.stock-card .price    { font-size: 1.15rem; font-weight: 700; margin-top: 4px; color: var(--text); font-variant-numeric: tabular-nums; }
+.stock-card .meta     { font-size: 0.72rem; color: var(--muted); margin-top: 3px; letter-spacing: 0.3px; line-height: 1.5; }
+.stock-card .premiums { font-size: 0.72rem; color: var(--muted); margin-top: 4px; line-height: 1.6; }
+.stock-card .card-btn { margin-top: 6px; width: 100%; padding: 5px; font-size: 0.72rem; }
 
 .stock-card .action-badge {
     margin-top: 6px;
-    padding: 2px 6px;
+    padding: 3px 8px;
     border-radius: 0;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     font-weight: 700;
     display: inline-block;
     letter-spacing: 1px;
@@ -302,8 +304,8 @@ button:disabled {
     flex-wrap: wrap;
 }
 .card-action-row button {
-    padding: 2px 5px;
-    font-size: 0.55rem;
+    padding: 4px 7px;
+    font-size: 0.68rem;
     border-radius: 0;
 }
 
@@ -317,7 +319,7 @@ button:disabled {
     margin-top: 12px;
 }
 .action-panel h3 {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     margin-bottom: 12px;
     color: var(--gold);
     cursor: default;
@@ -350,19 +352,19 @@ button:disabled {
     box-shadow: 0 0 6px rgba(0, 255, 65, 0.3);
 }
 .arena-zone .arena-label {
-    font-size: 0.65rem;
+    font-size: 0.78rem;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     color: var(--accent);
     margin-bottom: 8px;
 }
 .arena-zone .arena-card-info {
-    font-size: 0.8rem;
+    font-size: 0.88rem;
     font-weight: 600;
 }
 
 .arena-summary { text-align: left; width: 100%; }
-.arena-summary .arena-item { font-size: 0.75rem; padding: 3px 0; color: var(--text); }
+.arena-summary .arena-item { font-size: 0.82rem; padding: 4px 0; color: var(--text); line-height: 1.5; }
 
 /* ── Trade Log ── */
 
@@ -375,19 +377,19 @@ button:disabled {
     overflow-y: auto;
 }
 .battle-log h3 {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     color: var(--muted);
     margin-bottom: 10px;
     padding-bottom: 6px;
     border-bottom: 1px solid #1A1A1A;
 }
 .log-entry {
-    padding: 4px 0;
-    font-size: 0.72rem;
+    padding: 5px 0;
+    font-size: 0.82rem;
     border-bottom: 1px solid #111111;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 .log-entry.damage { color: var(--red); }
 .log-entry.gain   { color: var(--green); }
@@ -558,9 +560,9 @@ button:disabled {
     text-align: center;
 }
 .stat-card .stat-label {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     color: var(--muted);
 }
 .stat-card .stat-value {
@@ -587,7 +589,7 @@ button:disabled {
 
 .empty-state {
     color: var(--muted);
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     font-style: normal;
     padding: 16px;
     text-align: center;
@@ -602,9 +604,9 @@ button:disabled {
 
 .phase-indicator {
     display: inline-block;
-    padding: 4px 12px;
+    padding: 5px 14px;
     border-radius: 0;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
@@ -690,9 +692,9 @@ button:disabled {
 .battle-nw-card.opp { border-color: var(--red); }
 
 .battle-nw-label {
-    font-size: 0.55rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     color: var(--muted);
     margin-bottom: 8px;
 }
@@ -731,9 +733,9 @@ button:disabled {
 }
 
 .battle-event-item {
-    padding: 5px 10px;
-    margin-bottom: 3px;
-    font-size: 0.72rem;
+    padding: 6px 12px;
+    margin-bottom: 4px;
+    font-size: 0.82rem;
     border-radius: 0;
     background: transparent;
     border-left: 2px solid var(--muted);
@@ -803,8 +805,8 @@ button:disabled {
 
 .insights-title {
     text-align: center;
-    font-size: 0.8rem;
-    letter-spacing: 3px;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
     color: var(--accent);
     text-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
     margin-bottom: 16px;
@@ -818,9 +820,9 @@ button:disabled {
 }
 
 .insights-col h4 {
-    font-size: 0.7rem;
+    font-size: 0.82rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     color: var(--accent);
     margin-bottom: 12px;
     text-align: center;
@@ -832,8 +834,8 @@ button:disabled {
 }
 
 .insight-item {
-    font-size: 0.72rem;
-    line-height: 1.5;
+    font-size: 0.82rem;
+    line-height: 1.6;
     color: var(--text);
     padding: 8px 10px;
     margin-bottom: 6px;
@@ -860,7 +862,7 @@ button:disabled {
 }
 
 #llmInsightsLoading span {
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     color: var(--muted);
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -881,8 +883,8 @@ button:disabled {
 }
 
 #llmInsightsContent {
-    font-size: 0.75rem;
-    line-height: 1.7;
+    font-size: 0.85rem;
+    line-height: 1.8;
     color: var(--text);
 }
 
@@ -895,9 +897,9 @@ button:disabled {
     text-transform: uppercase;
 }
 
-#llmInsightsContent h1 { font-size: 0.95rem; }
-#llmInsightsContent h2 { font-size: 0.85rem; }
-#llmInsightsContent h3 { font-size: 0.75rem; }
+#llmInsightsContent h1 { font-size: 1.05rem; }
+#llmInsightsContent h2 { font-size: 0.95rem; }
+#llmInsightsContent h3 { font-size: 0.85rem; }
 
 #llmInsightsContent ul {
     list-style: none;
