@@ -13,6 +13,8 @@ Falls back to None when no key is set or the call fails.
 
 import os
 import json
+from dotenv import load_dotenv
+
 
 def generate_llm_insights(
     player_id: str,
@@ -24,11 +26,13 @@ def generate_llm_insights(
 
     Returns the LLM-generated markdown string, or None on failure.
     """
+    load_dotenv()
     groq_key = os.environ.get("GROQ_API_KEY")
     openai_key = os.environ.get("OPENAI_API_KEY")
 
     if not groq_key and not openai_key:
-        print("[LLM] No API key set (GROQ_API_KEY or OPENAI_API_KEY) — skipping LLM insights")
+        print(
+            "[LLM] No API key set (GROQ_API_KEY or OPENAI_API_KEY) — skipping LLM insights")
         return None
 
     try:
@@ -100,7 +104,8 @@ def _build_prompt(
 ) -> str:
     """Assemble all game stats into a detailed prompt."""
     is_winner = winner == player_id
-    result_str = "WON" if is_winner else ("DREW" if winner == "draw" else "LOST")
+    result_str = "WON" if is_winner else (
+        "DREW" if winner == "draw" else "LOST")
 
     trades = analytics.get("trade_history", [])
     opp_trades = opponent_analytics.get("trade_history", [])
