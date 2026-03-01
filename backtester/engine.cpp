@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- *  $TOCK MARKET — High-Performance Backtesting Engine
+ *  TRADING ARENA — High-Performance Backtesting Engine
  * ============================================================================
  *  C++ simulation core for evaluating AI strategies over thousands of
  *  3-month market jumps.  Dependency-free (standard library only).

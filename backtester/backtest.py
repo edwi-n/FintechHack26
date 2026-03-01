@@ -1,5 +1,5 @@
 """
-$TOCK MARKET — Backtesting Wrapper
+TRADING ARENA — Backtesting Wrapper
 ===================================
 Loads the C++ engine (.dll / .so) via ctypes, generates synthetic 3-month
 price windows, and runs 10 000 simulated games to evaluate the heuristic
@@ -285,7 +285,7 @@ def print_report(title: str, stats: dict):
 
 def main():
     print("=" * 60)
-    print("  $TOCK MARKET — AI Backtesting Engine")
+    print("  TRADING ARENA — AI Backtesting Engine")
     print("=" * 60)
 
     engine = _load_engine()

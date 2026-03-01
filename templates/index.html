@@ -4,7 +4,7 @@
 <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>$TOCK MARKET — Terminal</title>
+          <title>TRADING ARENA — Terminal</title>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
           <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
           <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
@@ -12,13 +12,13 @@
 
 <body>
           <div class="top-bar">
-                    <h1>$TOCK MARKET</h1>
+                    <h1>TRADING ARENA</h1>
                     <div class="round-info" id="roundInfo">-</div>
           </div>
 
           <!-- Mode Selection Menu -->
           <div id="menuScreen" class="lobby-screen">
-                    <h2>$TOCK MARKET</h2>
+                    <h2>TRADING ARENA</h2>
                     <p style="color: var(--muted); margin-bottom: 32px; font-size: 0.8rem; letter-spacing: 2px;">SELECT MODE</p>
                     <div style="display: flex; gap: 16px; justify-content: center;">
                               <button class="btn-ready" onclick="selectMode('offline')" style="padding: 14px 32px;">PLAY VS AI</button>
@@ -38,7 +38,7 @@
           </div>
 
           <div id="lobbyScreen" class="lobby-screen hidden">
-                    <h2>$TOCK MARKET</h2>
+                    <h2>TRADING ARENA</h2>
                     <p class="pulse" id="lobbyMsg">Waiting for opponent ...</p>
                     <p style="color: var(--muted); margin-top: 24px; font-size: 0.85rem;">Open this page in two browser
                               tabs to

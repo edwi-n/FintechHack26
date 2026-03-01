@@ -43,13 +43,13 @@ function showStockChart(data) {
                     options: {
                               responsive: true,
                               plugins: {
-                                        title: { display: true, text: data.ticker + ' Historical Price (\u00A3)', color: '#E0E0E0', font: { size: 14, family: 'monospace' } },
+                                        title: { display: true, text: data.ticker + ' Historical Price (\u00A3)', color: '#F0F0F0', font: { size: 14, family: 'monospace' } },
                                         legend: { display: false },
                                         annotation: undefined,
                               },
                               scales: {
-                                        y: { ticks: { color: '#888888', font: { size: 12 }, callback: function (v) { return '\u00A3' + v.toFixed(0); } }, grid: { color: '#1A1A1A' } },
-                                        x: { ticks: { color: '#888888', font: { size: 11 }, maxRotation: 45 }, grid: { color: '#1A1A1A' } },
+                                        y: { ticks: { color: '#9A9A9A', font: { size: 12 }, callback: function (v) { return '\u00A3' + v.toFixed(0); } }, grid: { color: '#1A1A1A' } },
+                                        x: { ticks: { color: '#9A9A9A', font: { size: 11 }, maxRotation: 45 }, grid: { color: '#1A1A1A' } },
                               },
                     },
           });
@@ -79,12 +79,12 @@ function renderNWChart(my, opp) {
                     options: {
                               responsive: true,
                               plugins: {
-                                        title: { display: true, text: 'Portfolio Value Over Time', color: '#E0E0E0', font: { size: 14, family: 'monospace' } },
-                                        legend: { labels: { color: '#888888', font: { size: 12 } } },
+                                        title: { display: true, text: 'Portfolio Value Over Time', color: '#F0F0F0', font: { size: 14, family: 'monospace' } },
+                                        legend: { labels: { color: '#9A9A9A', font: { size: 12 } } },
                               },
                               scales: {
-                                        y: { ticks: { color: '#888888', font: { size: 12 }, callback: function (v) { return '\u00A3' + v.toLocaleString(); } }, grid: { color: '#1A1A1A' } },
-                                        x: { ticks: { color: '#888888', font: { size: 11 } }, grid: { color: '#1A1A1A' } },
+                                        y: { ticks: { color: '#9A9A9A', font: { size: 12 }, callback: function (v) { return '\u00A3' + v.toLocaleString(); } }, grid: { color: '#1A1A1A' } },
+                                        x: { ticks: { color: '#9A9A9A', font: { size: 11 } }, grid: { color: '#1A1A1A' } },
                               },
                     },
           });
