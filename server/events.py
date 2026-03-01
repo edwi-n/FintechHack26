@@ -146,6 +146,31 @@ def register_events(app, socketio):
             "msg": f"You bought {card['ticker']} for £{cost:,.2f}"
         })
 
+    @socketio.on("sell_stock")
+    def handle_sell_stock(data):
+        """Player sells a stock from their bench back to the market."""
+        pid = data.get("player_id")
+        idx = data.get("card_index")
+        if game["phase"] != "buy":
+            emit("error", {"msg": "Not in buy phase!"})
+            return
+        p = game["players"].get(pid)
+        if p is None or idx is None:
+            emit("error", {"msg": "Invalid request."})
+            return
+        if idx < 0 or idx >= len(p["bench"]):
+            emit("error", {"msg": "Invalid bench index."})
+            return
+
+        card = p["bench"].pop(idx)
+        cost = round(card["s0"] * CARD_BUY_COST_PCT, 2)
+        p["net_worth"] -= cost
+        p["hand"].append(card)
+        broadcast_state(socketio)
+        emit("server_message", {
+            "msg": f"You sold {card['ticker']} back to market (sell fee: \u00a3{cost:,.2f})"
+        })
+
     @socketio.on("end_buy_phase")
     def handle_end_buy(data):
         """Player signals they are done buying."""
@@ -253,7 +278,8 @@ def register_events(app, socketio):
                 target_card = c
                 break
         if target_card is None:
-            emit("error", {"msg": "Target asset not found in opponent holdings."})
+            emit(
+                "error", {"msg": "Target asset not found in opponent holdings."})
             return
 
         if target_id in p["attack_puts"]:
@@ -368,7 +394,8 @@ def register_events(app, socketio):
                 if dd > max_dd:
                     max_dd = dd
             win_rate = (
-                round(player["options_won"] / player["options_played"] * 100, 1)
+                round(player["options_won"] /
+                      player["options_played"] * 100, 1)
                 if player["options_played"] > 0 else 0
             )
             return {

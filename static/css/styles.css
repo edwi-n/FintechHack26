@@ -116,6 +116,18 @@ button:disabled {
     background: #AA00FF;
     color: #000;
 }
+.btn-sell {
+    border-color: var(--red);
+    color: var(--red);
+    background: transparent;
+    width: 100%;
+    padding: 5px;
+    font-size: 0.72rem;
+}
+.btn-sell:hover:not(:disabled) {
+    background: var(--red);
+    color: #000;
+}
 .btn-clear {
     border-color: var(--muted);
     color: var(--muted);

@@ -4,7 +4,7 @@
  * All DOM rendering functions for the game UI.
  */
 
-/* global currentState, requestStockChart, buyStock, setCardAction,
+/* global currentState, requestStockChart, buyStock, sellStock, setCardAction,
           toggleAttackPut, endBuyPhase, confirmActions */
 
 function renderState(s) {
@@ -15,6 +15,15 @@ function renderState(s) {
                               (s.current_date ? '  |  Market Date: ' + s.current_date : '');
           updateNW('yourNW', s.net_worth);
           updateNW('oppNW', s.opponent_nw);
+
+          // Cash = net worth minus value of bench stocks
+          var benchValue = (s.bench || []).reduce(function (sum, c) { return sum + c.s0; }, 0);
+          var cash = s.net_worth - benchValue;
+          var cashEl = document.getElementById('yourCash');
+          if (cashEl) {
+                    cashEl.textContent = 'Cash: \u00A3' + cash.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    cashEl.style.color = cash < 0 ? 'var(--red)' : 'var(--muted)';
+          }
 
           var menuEl = document.getElementById('menuScreen');
           var lobbyEl = document.getElementById('lobbyScreen');
@@ -89,6 +98,12 @@ function renderBench(bench, phase, cardActions, ready) {
                     if (hasAction) {
                               var label = action.replace('_', ' ').toUpperCase();
                               html += '<div class="action-badge ' + action + '">' + label + '</div>';
+                    }
+
+                    if (phase === 'buy') {
+                              html += '<div class="card-action-row" onclick="event.stopPropagation()">';
+                              html += '<button class="card-btn btn-sell" onclick="sellStock(' + i + ')">Sell</button>';
+                              html += '</div>';
                     }
 
                     if (isAction) {
