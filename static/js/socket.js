@@ -48,13 +48,6 @@ socket.on('error', function (data) {
 socket.on('state_update', function (state) {
           currentState = state;
           renderState(state);
-          // Auto-close battle overlay when new round starts
-          if (state.phase === 'buy' || state.phase === 'action') {
-                    var battleOverlay = document.getElementById('battleOverlay');
-                    if (battleOverlay && !battleOverlay.classList.contains('hidden')) {
-                              battleOverlay.classList.add('hidden');
-                    }
-          }
 });
 
 socket.on('battle_result', function (result) {
