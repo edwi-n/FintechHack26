@@ -1,11 +1,8 @@
 # FintechHack26
 
 * [ ] generate llm insights after game end
-* [ ] change button in the top right
 * [ ] bigger text
-* [ ] implement a simple quant algorithm for ai player
 * [ ] news tab
-* [ ] don't show results immediately, instead the screen darkens and have animations for net worth and critical hits...
 * [ ] emotes
 * [ ] redo ui so looks slightly better
 
