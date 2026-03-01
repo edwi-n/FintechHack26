@@ -1,5 +1,5 @@
 """
-Trading Arena — A FinTech Card Game
+Trading Arena — Strategic Stock Battle
 ====================================
 Two-player strategy game where players manage stock portfolios and deploy
 derivatives (Puts / Calls) to attack opponents and defend their Net Worth.
