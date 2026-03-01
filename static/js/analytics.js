@@ -244,14 +244,12 @@ function showAnalytics(data) {
           }
           var oppId = myPlayerId === 'player_1' ? 'player_2' : 'player_1';
           renderPlayerStats('p1Stats', data.analytics[myPlayerId]);
-          document.getElementById('p1StatsTitle').textContent = 'You (Player ' + myPlayerNum + ')';
-          renderPlayerStats('p2Stats', data.analytics[oppId]);
-          document.getElementById('p2StatsTitle').textContent = 'Opponent';
-          renderNWChart(data.analytics[myPlayerId].nw_history, data.analytics[oppId].nw_history);
+          document.getElementById('p1StatsTitle').textContent = 'Your Performance';
+          renderNWChart(data.analytics[myPlayerId].nw_history);
 
           // Render LLM insights
           if (data.insights) {
-                    renderInsights(data.insights, oppId);
+                    renderInsights(data.insights);
           }
 
           // Request LLM-powered deep analysis
@@ -281,21 +279,14 @@ function renderPlayerStats(id, a) {
                     '<div class="stat-card"><div class="stat-label">Final NW</div><div class="stat-value" style="color:' + (a.final_nw >= 100000 ? 'var(--green)' : 'var(--gold)') + '">\u00A3' + a.final_nw.toLocaleString('en-GB', { minimumFractionDigits: 2 }) + '</div></div>';
 }
 
-function renderInsights(insights, oppId) {
+function renderInsights(insights) {
           var myInsights = insights[myPlayerId] || [];
-          var oppInsights = insights[oppId] || [];
 
           document.getElementById('insightsP1Title').textContent = 'Your Strategy Analysis';
-          document.getElementById('insightsP2Title').textContent = 'Opponent Strategy Analysis';
 
           var p1List = document.getElementById('insightsP1');
-          var p2List = document.getElementById('insightsP2');
 
           p1List.innerHTML = myInsights.map(function(insight) {
-                    return '<li class="insight-item">' + insight + '</li>';
-          }).join('');
-
-          p2List.innerHTML = oppInsights.map(function(insight) {
                     return '<li class="insight-item">' + insight + '</li>';
           }).join('');
 }

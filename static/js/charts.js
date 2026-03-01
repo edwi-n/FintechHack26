@@ -20,7 +20,7 @@ function showStockChart(data) {
           if (stockChart) stockChart.destroy();
 
           var lastIdx = data.prices.length - 1;
-          var pointColors = data.prices.map(function (_, i) { return i === lastIdx ? '#f59e0b' : '#00d4ff'; });
+          var pointColors = data.prices.map(function (_, i) { return i === lastIdx ? '#FFB800' : '#00FF41'; });
           var pointRadii = data.prices.map(function (_, i) { return i === lastIdx ? 8 : 1; });
 
           // Show every ~8th date label to avoid clutter
@@ -33,8 +33,8 @@ function showStockChart(data) {
                               datasets: [{
                                         label: data.ticker + ' Close Price',
                                         data: data.prices,
-                                        borderColor: '#00d4ff',
-                                        backgroundColor: 'rgba(0,212,255,0.08)',
+                                        borderColor: '#00FF41',
+                                        backgroundColor: 'rgba(0,255,65,0.05)',
                                         fill: true, tension: 0.2, borderWidth: 2,
                                         pointRadius: pointRadii,
                                         pointBackgroundColor: pointColors,
@@ -43,13 +43,13 @@ function showStockChart(data) {
                     options: {
                               responsive: true,
                               plugins: {
-                                        title: { display: true, text: data.ticker + ' Historical Price (\u00A3)', color: '#e2e8f0', font: { size: 14 } },
+                                        title: { display: true, text: data.ticker + ' Historical Price (\u00A3)', color: '#C8C8C8', font: { size: 13, family: 'monospace' } },
                                         legend: { display: false },
                                         annotation: undefined,
                               },
                               scales: {
-                                        y: { ticks: { color: '#94a3b8', callback: function (v) { return '\u00A3' + v.toFixed(0); } }, grid: { color: '#1e293b' } },
-                                        x: { ticks: { color: '#94a3b8', maxRotation: 45 }, grid: { color: '#1e293b' } },
+                                        y: { ticks: { color: '#555555', callback: function (v) { return '\u00A3' + v.toFixed(0); } }, grid: { color: '#1A1A1A' } },
+                                        x: { ticks: { color: '#555555', maxRotation: 45 }, grid: { color: '#1A1A1A' } },
                               },
                     },
           });
@@ -60,7 +60,7 @@ function closeChartModal() {
           if (stockChart) { stockChart.destroy(); stockChart = null; }
 }
 
-function renderNWChart(my, opp) {
+function renderNWChart(my) {
           var ctx = document.getElementById('nwChart').getContext('2d');
           var labels = my.map(function (_, i) { return i === 0 ? 'Start' : 'R' + i; });
           if (nwChart) nwChart.destroy();
@@ -69,19 +69,18 @@ function renderNWChart(my, opp) {
                     data: {
                               labels: labels,
                               datasets: [
-                                        { label: 'Your NW', data: my, borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.1)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#00d4ff' },
-                                        { label: 'Opponent NW', data: opp, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.1)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#7c3aed' },
+                                        { label: 'Your Portfolio', data: my, borderColor: '#00FF41', backgroundColor: 'rgba(0,255,65,0.05)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#00FF41' },
                               ],
                     },
                     options: {
                               responsive: true,
                               plugins: {
-                                        title: { display: true, text: 'Portfolio Value Over Time', color: '#e2e8f0', font: { size: 14 } },
-                                        legend: { labels: { color: '#94a3b8' } },
+                                        title: { display: true, text: 'Your Portfolio Value Over Time', color: '#C8C8C8', font: { size: 13, family: 'monospace' } },
+                                        legend: { labels: { color: '#555555' } },
                               },
                               scales: {
-                                        y: { ticks: { color: '#94a3b8', callback: function (v) { return '\u00A3' + v.toLocaleString(); } }, grid: { color: '#1e293b' } },
-                                        x: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
+                                        y: { ticks: { color: '#555555', callback: function (v) { return '\u00A3' + v.toLocaleString(); } }, grid: { color: '#1A1A1A' } },
+                                        x: { ticks: { color: '#555555' }, grid: { color: '#1A1A1A' } },
                               },
                     },
           });
