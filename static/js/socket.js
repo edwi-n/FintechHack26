@@ -72,3 +72,7 @@ socket.on('game_reset', function () {
 socket.on('stock_chart_data', function (data) {
           showStockChart(data);
 });
+
+socket.on('llm_insights', function (data) {
+          handleLLMInsights(data);
+});
