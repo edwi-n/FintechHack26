@@ -1,8 +1,8 @@
-# Trading Arena — Strategic Stock Battle
+# Trading Arena - Strategic Stock Battle
 
-> **Hackathon Category:** Data in Finance — *Financial markets generate vast amounts of data, yet turning that information into meaningful insight remains a challenge. Build a tool using financial data to inform decision-making or identify opportunities.*
+> **Hackathon Category:** Data in Finance - *Financial markets generate vast amounts of data, yet turning that information into meaningful insight remains a challenge. Build a tool using financial data to inform decision-making or identify opportunities.*
 
-**Trading Arena** is a two-player strategy card game where players manage stock portfolios and deploy derivatives (Puts, Calls) to attack opponents and defend their Net Worth. It uses **real historical stock data** (10 years via Yahoo Finance), **Black-Scholes option pricing**, and a **C++ AI engine** — turning financial market analysis into a competitive, strategic experience.
+**Trading Arena** is a two-player strategy card game where players manage stock portfolios and deploy derivatives (Puts, Calls) to attack opponents and defend their Net Worth. It uses **real historical stock data** (10 years via Yahoo Finance), **Black-Scholes option pricing**, and a **C++ AI engine** - turning financial market analysis into a competitive, strategic experience.
 
 ---
 
@@ -23,11 +23,11 @@
 
 Players start with **£1,000** and compete over **5 rounds**, each representing a **3-month market quarter**. Every round has three phases:
 
-1. **Buy Phase** — Purchase stock cards from a randomly generated market.
-2. **Action Phase** — Assign derivative actions (Place, Call, Defense Put, Attack Put) to your holdings and target opponent assets.
-3. **Battle Phase** — Time jumps 3 months forward, stock prices reveal, combat resolves, and Net Worth updates.
+1. **Buy Phase** - Purchase stock cards from a randomly generated market.
+2. **Action Phase** - Assign derivative actions (Place, Call, Defense Put, Attack Put) to your holdings and target opponent assets.
+3. **Battle Phase** - Time jumps 3 months forward, stock prices reveal, combat resolves, and Net Worth updates.
 
-The player with the highest Net Worth at the end wins — or knock your opponent to £0 for an early KO.
+The player with the highest Net Worth at the end wins - or knock your opponent to £0 for an early KO.
 
 ### Game Modes
 
@@ -45,9 +45,9 @@ The player with the highest Net Worth at the end wins — or knock your opponent
 | Zone | Purpose |
 |------|---------|
 | **The Market (Shop)** | 5 randomly generated stock cards available for purchase each round |
-| **Holdings (Bench)** | Stocks the player owns — passively grow/shrink via market movement ($\omega$) |
+| **Holdings (Bench)** | Stocks the player owns - passively grow/shrink via market movement ($\omega$) |
 | **The Portfolio (Arena)** | Where players assign actions to attack opponents or defend their Net Worth |
-| **Net Worth Tracker** | The player's "health bar" — hits zero and you lose |
+| **Net Worth Tracker** | The player's "health bar" - hits zero and you lose |
 
 ### Combat Math
 
@@ -63,11 +63,11 @@ Options (Call, Put) charge a **Black-Scholes premium** upfront, deducted from yo
 ### End-of-Game Analytics
 
 The game renders a full analytics dashboard:
-- **Total Profit** — net gain/loss from starting £1,000
-- **Options Win Rate** — percentage of derivatives that produced positive value
-- **Max Drawdown** — peak-to-trough drop in NW
-- **NW Over Time Chart** — line chart tracking portfolio value per round
-- **AI Strategy Advisor** — LLM-powered post-game analysis (Groq or OpenAI)
+- **Total Profit** - net gain/loss from starting £1,000
+- **Options Win Rate** - percentage of derivatives that produced positive value
+- **Max Drawdown** - peak-to-trough drop in NW
+- **NW Over Time Chart** - line chart tracking portfolio value per round
+- **AI Strategy Advisor** - LLM-powered post-game analysis (Groq or OpenAI)
 
 ---
 
@@ -75,7 +75,7 @@ The game renders a full analytics dashboard:
 
 ```
 FintechHack26/
-├── app.py                  # Entry point — Flask + SocketIO server
+├── app.py                  # Entry point - Flask + SocketIO server
 ├── requirements.txt        # Python dependencies
 ├── README.md               # This file
 │
@@ -117,7 +117,7 @@ FintechHack26/
 ### Prerequisites
 
 - **Python 3.10+**
-- **g++ (64-bit)** — only needed for the offline AI bot & backtester
+- **g++ (64-bit)** - only needed for the offline AI bot & backtester
 
 ### 1. Clone & install dependencies
 
@@ -127,7 +127,7 @@ cd FintechHack26
 pip install -r requirements.txt
 ```
 
-### 2. Compile the C++ engine (optional — enables smart AI)
+### 2. Compile the C++ engine (optional - enables smart AI)
 
 The offline bot uses a compiled C++ heuristic engine. Without it, the bot falls back to random moves.
 
@@ -137,7 +137,7 @@ The offline bot uses a compiled C++ heuristic engine. Without it, the bot falls 
 # Install a 64-bit compiler if needed:
 winget install BrechtSanders.WinLibs.POSIX.UCRT
 
-# Compile (must match Python architecture — typically 64-bit):
+# Compile (must match Python architecture - typically 64-bit):
 cd backtester
 x86_64-w64-mingw32-g++ -shared -O2 -o engine.dll engine.cpp
 ```
@@ -154,7 +154,7 @@ g++ -shared -fPIC -O2 -o engine.so engine.cpp
 For AI-powered post-game strategy analysis, set one of these environment variables:
 
 ```bash
-# Groq (free, recommended — uses llama-3.1-8b-instant)
+# Groq (free, recommended - uses llama-3.1-8b-instant)
 export GROQ_API_KEY=your_key_here
 
 # OR OpenAI (uses gpt-4o-mini)
@@ -181,7 +181,7 @@ Open [http://localhost:5000](http://localhost:5000) in your browser.
 
 ### Play Multiplayer (two players)
 
-Multiplayer uses Socket.IO — both players connect to the **same server**.
+Multiplayer uses Socket.IO - both players connect to the **same server**.
 
 #### Same machine (local)
 
@@ -215,7 +215,7 @@ To play with someone on a different network, expose port 5000 using one of these
 
 | Method | Command / Steps |
 |--------|----------------|
-| **ngrok** (recommended) | `ngrok http 5000` — gives a public URL like `https://abc123.ngrok.io` |
+| **ngrok** (recommended) | `ngrok http 5000` - gives a public URL like `https://abc123.ngrok.io` |
 | **localtunnel** | `npx localtunnel --port 5000` |
 | **Port forwarding** | Forward port 5000 on your router to your machine's local IP |
 
@@ -265,7 +265,7 @@ Runs **10,000 simulated games** (AI vs random) and reports win rate, average pro
 | **AI Engine** | C++ (compiled to DLL/SO), loaded via Python `ctypes` |
 | **LLM Insights** | Groq (llama-3.1-8b-instant) or OpenAI (gpt-4o-mini) |
 | **Frontend** | Vanilla JS, Chart.js, Web Audio API |
-| **Styling** | Custom CSS — Brutalist Bloomberg Terminal aesthetic |
+| **Styling** | Custom CSS - Brutalist Bloomberg Terminal aesthetic |
 
 ---
 
